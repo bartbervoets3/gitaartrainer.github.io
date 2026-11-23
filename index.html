@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gitaar Notentrainer</title>
+
+<style>
+:root {
+    color-scheme: dark;
+    --bg: #12100d;
+    --panel: #1d1812;
+    --panel-light: #382e22;
+    --wood-light: #bc8e57;
+    --wood-dark: #95693c;
+    --cream: #f4ead5;
+    --yellow: #efb849;
+    --green: #2bc360;
+    --red: #e04444;
+    --blue: #4d7699;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 24px;
+    background: var(--bg);
+    color: #f7f3e8;
+    font-family: system-ui, Arial, sans-serif;
+}
+
+button {
+    border: 0;
+    border-radius: 9px;
+    padding: 9px 14px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+button:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+}
+
+#game {
+    width: min(100%, 1080px);
+    margin: auto;
+    padding: 18px;
+    overflow: hidden;
+    background: var(--panel);
+    border-radius: 16px;
+    box-shadow: 0 15px 45px #0007;
+}
+
+/* HEADER */
+
+.top {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.title {
+    margin-right: auto;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.stat {
+    padding: 8px 12px;
+    background: var(--panel-light);
+    border-radius: 9px;
+}
+
+.mode {
+    display: flex;
+    gap: 5px;
+    padding: 4px;
+    background: #2b241b;
+    border-radius: 11px;
+}
+
+.mode button {
+    background: #4a3d2c;
+    color: #ddd;
+}
+
+.mode button.active {
+    background: var(--yellow);
+    color: #241800;
+}
+
+.play {
+    background: var(--yellow);
+    color: #241800;
+}
+
+.start {
+    background: var(--blue);
+    color: #fff;
+}
+
+/* MESSAGE */
+
+.message-row {
+    display: flex;
+    min-height: 48px;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.msg {
+    padding: 10px 0;
+    font-weight: 700;
+}
+
+.sound-status {
+    color: #d7c9b5;
+    font-size: 12px;
+    text-align: right;
+}
+
+/* GUITAR NECK */
+
+.scroll {
+    padding: 4px 18px;
+    overflow-x: auto;
+}
+
+.neck {
+    min-width: 880px;
+    padding: 9px 8px;
+    background:
+        linear-gradient(
+            90deg,
+            var(--wood-dark),
+            var(--wood-light) 50%,
+            var(--wood-dark)
+        );
+    border-radius: 9px;
+    box-shadow:
+        inset 0 0 22px #4d2f18,
+        0 7px 18px #0005;
+}
+
+.nums,
+.string {
+    display: grid;
+    grid-template-columns: 55px repeat(12, 1fr);
+    align-items: center;
+}
+
+.nums {
+    color: #25160b;
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.string {
+    position: relative;
+    height: 47px;
+}
+
+.string::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: 0;
+    left: 55px;
+    height: var(--string-width, 2px);
+    background: #eee7dd;
+    box-shadow: 0 1px 1px #4a3823;
+    pointer-events: none;
+}
+
+.label {
+    color: #25160b;
+    font-weight: 900;
+    text-align: center;
+}
+
+.cell {
+    position: relative;
+    display: flex;
+    height: 47px;
+    align-items: center;
+    justify-content: center;
+    border-right: 3px solid #e6ddc5;
+}
+
+.cell.first {
+    border-left: 5px solid #f8f0dd;
+}
+
+/* NOTE MARKER */
+
+.dot {
+    position: relative;
+    z-index: 5;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    background: #101010;
+    border: 3px solid #050505;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px #0009;
+    transition:
+        background 0.12s,
+        transform 0.12s;
+}
+
+.dot:hover {
+    transform: scale(1.12);
+}
+
+.dot:active {
+    transform: scale(0.94);
+}
+
+/*
+ * Open snaar:
+ * op de eerste fret-bar, met dubbele rand.
+ */
+.dot.open {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 27px;
+    height: 27px;
+    transform: translate(-50%, -50%);
+    border: 3px solid var(--cream);
+    box-shadow:
+        0 0 0 3px #5f4227,
+        0 2px 5px #0009;
+}
+
+.dot.open:hover {
+    transform: translate(-50%, -50%) scale(1.12);
+}
+
+.dot.open:active {
+    transform: translate(-50%, -50%) scale(0.94);
+}
+
+.dot.good {
+    background: var(--green);
+}
+
+.dot.bad {
+    background: var(--red);
+}
+
+/* ANSWER BUTTONS */
+
+.answer-keys {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.key {
+    display: flex;
+    min-width: 54px;
+    min-height: 52px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 10px;
+    background: #eee;
+    color: #222;
+}
+
+.key:hover:not(:disabled) {
+    background: #fff;
+}
+
+.key.sharp {
+    background: #292929;
+    color: #fff;
+    border: 1px solid #777;
+}
+
+.key.sharp:hover:not(:disabled) {
+    background: #414141;
+}
+
+.note-main {
+    display: block;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.05;
+    pointer-events: none;
+    user-select: none;
+}
+
+.note-solfege {
+    display: block;
+    margin-top: 4px;
+    font-size: 9px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+    opacity: 0.48;
+    pointer-events: none;
+    user-select: none;
+}
+
+.key.sharp .note-solfege {
+    color: #d5d5d5;
+}
+
+.hint {
+    margin-top: 10px;
+    color: #d7c9b5;
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+/* CREDIT */
+
+.credits {
+    margin-top: 12px;
+    color: #776f65;
+    font-size: 9px;
+    font-style: italic;
+    font-weight: 400;
+    text-align: center;
+    opacity: 0.5;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    body {
+        padding: 0;
+        background: var(--panel);
+    }
+
+    #game {
+        width: 100%;
+        min-height: 100vh;
+        padding: 10px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .top {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+    }
+
+    .title {
+        grid-column: 1 / -1;
+        margin: 0 0 3px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .stat {
+        padding: 7px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .mode {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+    }
+
+    .mode button {
+        min-height: 42px;
+        padding: 8px;
+    }
+
+    .play,
+    .start {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .message-row {
+        display: block;
+        min-height: 55px;
+    }
+
+    .msg {
+        padding: 9px 2px 3px;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .sound-status {
+        margin-bottom: 5px;
+        font-size: 10px;
+        text-align: center;
+    }
+
+    /*
+     * Alle 12 frets passen op de schermbreedte.
+     */
+    .scroll {
+        width: 100%;
+        padding: 0;
+        overflow: visible;
+    }
+
+    .neck {
+        width: 100%;
+        min-width: 0;
+        padding: 6px 3px;
+        border-radius: 6px;
+    }
+
+    .nums,
+    .string {
+        grid-template-columns:
+            25px
+            repeat(12, minmax(0, 1fr));
+    }
+
+    .nums {
+        font-size: 8px;
+    }
+
+    .string {
+        height: 42px;
+    }
+
+    .label {
+        font-size: 11px;
+    }
+
+    .cell {
+        height: 42px;
+        border-right-width: 2px;
+    }
+
+    .cell.first {
+        border-left-width: 4px;
+    }
+
+    .string::after {
+        left: 25px;
+    }
+
+    .dot {
+        width: 23px;
+        height: 23px;
+        border-width: 3px;
+    }
+
+    .dot.open {
+        width: 25px;
+        height: 25px;
+    }
+
+    .answer-keys {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 6px;
+        width: 100%;
+        margin-top: 12px;
+    }
+
+    .key {
+        min-width: 0;
+        min-height: 52px;
+        padding: 5px 3px;
+    }
+
+    .note-main {
+        font-size: 16px;
+    }
+
+    .note-solfege {
+        margin-top: 3px;
+        font-size: 9px;
+    }
+
+    .hint {
+        margin-top: 8px;
+        padding: 0 5px;
+        font-size: 10px;
+        line-height: 1.35;
+    }
+
+    .credits {
+        margin-top: 10px;
+        font-size: 8px;
+    }
+}
+
+/* VERY SMALL PHONES */
+
+@media (max-width: 390px) {
+    #game {
+        padding: 7px;
+    }
+
+    .title {
+        font-size: 18px;
+    }
+
+    .neck {
+        padding-right: 2px;
+        padding-left: 2px;
+    }
+
+    .nums,
+    .string {
+        grid-template-columns:
+            22px
+            repeat(12, minmax(0, 1fr));
+    }
+
+    .string::after {
+        left: 22px;
+    }
+
+    .string {
+        height: 39px;
+    }
+
+    .cell {
+        height: 39px;
+    }
+
+    .dot {
+        width: 21px;
+        height: 21px;
+    }
+
+    .dot.open {
+        width: 23px;
+        height: 23px;
+    }
+
+    .answer-keys {
+        gap: 4px;
+    }
+
+    .key {
+        min-height: 49px;
+        padding: 4px 2px;
+    }
+
+    .note-main {
+        font-size: 15px;
+    }
+
+    .note-solfege {
+        font-size: 8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main id="game">
+
+    <div class="top">
+        <div class="title">🎸 Gitaar Notentrainer</div>
+
+        <div class="stat">
+            Score:
+            <strong id="score">0</strong>
+        </div>
+
+        <div class="stat">
+            Pogingen:
+            <strong id="tries">0</strong>
+        </div>
+
+        <div
+            class="mode"
+            role="group"
+            aria-label="Moeilijkheid">
+
+            <button
+                type="button"
+                id="naturalMode"
+                class="active"
+                aria-pressed="true">
+                Hele noten
+            </button>
+
+            <button
+                type="button"
+                id="allMode"
+                aria-pressed="false">
+                Ook halve noten
+            </button>
+        </div>
+
+        <button
+            type="button"
+            id="playPause"
+            class="play">
+            ▶ PLAY
+        </button>
+
+        <button
+            type="button"
+            id="start"
+            class="start">
+            ▶ Start
+        </button>
+    </div>
+
+    <div class="message-row">
+        <div
+            id="message"
+            class="msg"
+            aria-live="polite">
+            Druk op Start om te beginnen.
+        </div>
+
+        <div
+            id="soundStatus"
+            class="sound-status">
+            Geluid start zodra je op Start drukt.
+        </div>
+    </div>
+
+    <div class="scroll">
+        <div
+            id="neck"
+            class="neck"
+            aria-label="Gitaarhals">
+        </div>
+    </div>
+
+    <div
+        id="answerKeys"
+        class="answer-keys"
+        aria-label="Antwoordknoppen">
+    </div>
+
+    <div id="hint" class="hint">
+        Hele noten · open snaar = dubbele rand ·
+        tik op het bolletje om de toon opnieuw te horen
+    </div>
+
+    <div class="credits">
+        Prompt-fluisteraar: Bart Bervoets
+    </div>
+
+</main>
+
+<script>
+(() => {
+    "use strict";
+
+    /* DOM */
+
+    const game = document.querySelector("#game");
+    const neck = document.querySelector("#neck");
+    const scoreDisplay = document.querySelector("#score");
+    const triesDisplay = document.querySelector("#tries");
+    const message = document.querySelector("#message");
+    const soundStatus = document.querySelector("#soundStatus");
+    const playPauseButton = document.querySelector("#playPause");
+    const startButton = document.querySelector("#start");
+    const naturalModeButton = document.querySelector("#naturalMode");
+    const allModeButton = document.querySelector("#allMode");
+    const answerKeys = document.querySelector("#answerKeys");
+    const hint = document.querySelector("#hint");
+
+    /*
+     * Klassieke gitaar in standaardstemming.
+     * Visueel van boven naar beneden:
+     * hoge E, B, G, D, A, lage E.
+     */
+    const strings = [
+        { name: "E", midi: 64, number: 1 },
+        { name: "B", midi: 59, number: 2 },
+        { name: "G", midi: 55, number: 3 },
+        { name: "D", midi: 50, number: 4 },
+        { name: "A", midi: 45, number: 5 },
+        { name: "E", midi: 40, number: 6 }
+    ];
+
+    const noteNames = [
+        "C", "C#", "D", "D#", "E", "F",
+        "F#", "G", "G#", "A", "A#", "B"
+    ];
+
+    /*
+     * Hoofdnoten met informatieve solfège-benaming.
+     * De solfège-tekst is geen afzonderlijk antwoordelement.
+     */
+    const answerNotes = [
+        { note: "A",  solfege: "la" },
+        { note: "A#", solfege: "la#" },
+        { note: "B",  solfege: "si" },
+        { note: "C",  solfege: "do" },
+        { note: "C#", solfege: "do#" },
+        { note: "D",  solfege: "re" },
+        { note: "D#", solfege: "re#" },
+        { note: "E",  solfege: "mi" },
+        { note: "F",  solfege: "fa" },
+        { note: "F#", solfege: "fa#" },
+        { note: "G",  solfege: "sol" },
+        { note: "G#", solfege: "sol#" }
+    ];
+
+    const naturalNotes = new Set([
+        "A", "B", "C", "D", "E", "F", "G"
+    ]);
+
+    /* GAME STATE */
+
+    const positions = [];
+
+    let score = 0;
+    let tries = 0;
+    let activePosition = null;
+    let playing = false;
+    let started = false;
+    let answerLocked = false;
+    let mode = "natural";
+    let questionTimer = null;
+
+    /* AUDIO STATE */
+
+    let audioContext = null;
+    let currentSource = null;
+
+    function midiToFrequency(midi) {
+        return 440 * Math.pow(2, (midi - 69) / 12);
+    }
+
+    function noteNameFromMidi(midi) {
+        return noteNames[midi % 12];
+    }
+
+    function getAudioContext() {
+        if (!audioContext) {
+            const AudioContextClass =
+                window.AudioContext ||
+                window.webkitAudioContext;
+
+            if (!AudioContextClass) {
+                soundStatus.textContent =
+                    "Web Audio API wordt niet ondersteund.";
+                return null;
+            }
+
+            audioContext = new AudioContextClass();
+        }
+
+        return audioContext;
+    }
+
+    async function unlockAudio() {
+        const context = getAudioContext();
+
+        if (!context) {
+            return false;
+        }
+
+        if (context.state === "suspended") {
+            try {
+                await context.resume();
+            } catch {
+                soundStatus.textContent =
+                    "Geluid kon niet worden gestart.";
+                return false;
+            }
+        }
+
+        if (context.state === "running") {
+            soundStatus.textContent =
+                "🔊 Tik op het bolletje om de toon opnieuw te horen";
+            return true;
+        }
+
+        return false;
+    }
+
+    /*
+     * Karplus-Strong-synthese voor een warme nylon-snaarklank.
+     */
+    async function playKarplusStrong(midi, stringNumber) {
+        const unlocked = await unlockAudio();
+
+        if (!unlocked) {
+            return;
+        }
+
+        const context = audioContext;
+        const now = context.currentTime;
+        const sampleRate = context.sampleRate;
+        const frequency = midiToFrequency(midi);
+
+        /*
+         * Compensatie voor de extra vertraging
+         * van het averaging-filter.
+         */
+        const delayLength = Math.max(
+            2,
+            Math.round(sampleRate / frequency - 0.5)
+        );
+
+        /*
+         * Lage snaren krijgen iets meer sustain en warmte.
+         */
+        const bassFactor = (stringNumber - 1) / 5;
+        const duration = 2.1 + bassFactor * 0.9;
+        const feedback = 0.9925 + bassFactor * 0.002;
+        const brightness = 0.48 + (1 - bassFactor) * 0.12;
+        const totalSamples = Math.ceil(duration * sampleRate);
+
+        const delay = new Float32Array(delayLength);
+        const output = new Float32Array(totalSamples);
+
+        /*
+         * Zachte, enigszins gefilterde ruis als snaaraanslag.
+         */
+        let previousNoise = 0;
+
+        for (let i = 0; i < delayLength; i++) {
+            const noise = Math.random() * 2 - 1;
+
+            const softNoise =
+                noise * brightness +
+                previousNoise * (1 - brightness);
+
+            const envelope =
+                0.72 +
+                0.28 * Math.sin(Math.PI * i / delayLength);
+
+            delay[i] = softNoise * envelope * 0.78;
+            previousNoise = noise;
+        }
+
+        /*
+         * Karplus-Strong-feedbacklus.
+         */
+        let index = 0;
+        let previousSample = 0;
+
+        for (let i = 0; i < totalSamples; i++) {
+            const current = delay[index];
+            const next = delay[(index + 1) % delayLength];
+
+            const averaged =
+                0.47 * current +
+                0.47 * next +
+                0.06 * previousSample;
+
+            const newSample = averaged * feedback;
+
+            /*
+             * Korte fade-in en fade-out voorkomen clicks.
+             */
+            const attack = Math.min(
+                1,
+                i / Math.max(1, sampleRate * 0.004)
+            );
+
+            const remaining = totalSamples - i;
+
+            const release = Math.min(
+                1,
+                remaining / Math.max(1, sampleRate * 0.08)
+            );
+
+            output[i] = current * attack * release;
+            delay[index] = newSample;
+            previousSample = current;
+            index = (index + 1) % delayLength;
+        }
+
+        const buffer = context.createBuffer(
+            1,
+            totalSamples,
+            sampleRate
+        );
+
+        buffer.copyToChannel(output, 0);
+
+        /*
+         * Vorige toon stoppen zodat de oefentoon duidelijk blijft.
+         */
+        if (currentSource) {
+            try {
+                currentSource.stop();
+            } catch {
+                // De vorige bron was mogelijk al beëindigd.
+            }
+        }
+
+        const source = context.createBufferSource();
+        source.buffer = buffer;
+
+        /*
+         * Eenvoudige resonanties van een klassieke gitaarkast.
+         */
+        const bodyBass = context.createBiquadFilter();
+        bodyBass.type = "peaking";
+        bodyBass.frequency.value = 105;
+        bodyBass.Q.value = 1;
+        bodyBass.gain.value = 2.5;
+
+        const bodyMain = context.createBiquadFilter();
+        bodyMain.type = "peaking";
+        bodyMain.frequency.value = 205;
+        bodyMain.Q.value = 1.15;
+        bodyMain.gain.value = 4.2;
+
+        const bodyMid = context.createBiquadFilter();
+        bodyMid.type = "peaking";
+        bodyMid.frequency.value = 520;
+        bodyMid.Q.value = 0.9;
+        bodyMid.gain.value = 1.8;
+
+        /*
+         * Hoogaf-filter voor een warmere nylon-klank.
+         */
+        const warmth = context.createBiquadFilter();
+        warmth.type = "lowpass";
+        warmth.frequency.value =
+            2800 + (1 - bassFactor) * 1300;
+        warmth.Q.value = 0.72;
+
+        const master = context.createGain();
+
+        master.gain.setValueAtTime(0.0001, now);
+        master.gain.exponentialRampToValueAtTime(
+            0.48,
+            now + 0.008
+        );
+        master.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + duration
+        );
+
+        source.connect(bodyBass);
+        bodyBass.connect(bodyMain);
+        bodyMain.connect(bodyMid);
+        bodyMid.connect(warmth);
+        warmth.connect(master);
+        master.connect(context.destination);
+
+        source.addEventListener("ended", () => {
+            if (currentSource === source) {
+                currentSource = null;
+            }
+        });
+
+        currentSource = source;
+        source.start(now);
+    }
+
+    /* BUILD FRETBOARD */
+
+    function buildFretboard() {
+        const numbers = document.createElement("div");
+        numbers.className = "nums";
+
+        numbers.innerHTML =
+            "<div></div>" +
+            Array.from(
+                { length: 12 },
+                (_, index) => `<div>${index + 1}</div>`
+            ).join("");
+
+        neck.appendChild(numbers);
+
+        strings.forEach((string, index) => {
+            const row = document.createElement("div");
+            row.className = "string";
+
+            /*
+             * Bassnaren worden visueel dikker weergegeven.
+             */
+            row.style.setProperty(
+                "--string-width",
+                `${1.4 + index * 0.35}px`
+            );
+
+            const label = document.createElement("div");
+            label.className = "label";
+            label.textContent = string.name;
+            label.title = `Snaar ${string.number}`;
+
+            row.appendChild(label);
+
+            const cells = [];
+
+            /*
+             * Gefrette posities 1 tot en met 12.
+             */
+            for (let fret = 1; fret <= 12; fret++) {
+                const cell = document.createElement("div");
+                cell.className = "cell";
+
+                if (fret === 1) {
+                    cell.classList.add("first");
+                }
+
+                row.appendChild(cell);
+                cells.push(cell);
+
+                const midi = string.midi + fret;
+
+                positions.push({
+                    element: cell,
+                    note: noteNameFromMidi(midi),
+                    midi,
+                    fret,
+                    open: false,
+                    stringNumber: string.number
+                });
+            }
+
+            /*
+             * Open snaar:
+             * logisch fret 0, visueel op de eerste fret-bar.
+             */
+            positions.push({
+                element: cells[0],
+                note: noteNameFromMidi(string.midi),
+                midi: string.midi,
+                fret: 0,
+                open: true,
+                stringNumber: string.number
+            });
+
+            neck.appendChild(row);
+        });
+    }
+
+    /* BUILD ANSWER KEYS */
+
+    function buildAnswerKeys() {
+        answerNotes.forEach(item => {
+            const button = document.createElement("button");
+
+            button.type = "button";
+            button.className = "key";
+            button.dataset.note = item.note;
+
+            if (item.note.includes("#")) {
+                button.classList.add("sharp");
+            }
+
+            /*
+             * De solfège-naam is alleen informatief.
+             * Beide spans negeren pointer-events en tekstselectie.
+             */
+            const mainNote = document.createElement("span");
+            mainNote.className = "note-main";
+            mainNote.textContent = item.note;
+            mainNote.setAttribute("aria-hidden", "true");
+
+            const solfege = document.createElement("span");
+            solfege.className = "note-solfege";
+            solfege.textContent = item.solfege;
+            solfege.setAttribute("aria-hidden", "true");
+
+            button.appendChild(mainNote);
+            button.appendChild(solfege);
+
+            button.setAttribute(
+                "aria-label",
+                `Antwoord ${item.note}`
+            );
+
+            button.addEventListener("click", () => {
+                submitAnswer(item.note);
+            });
+
+            answerKeys.appendChild(button);
+        });
+    }
+
+    /* DIFFICULTY MODE */
+
+    function updateModeInterface() {
+        const natural = mode === "natural";
+
+        naturalModeButton.classList.toggle(
+            "active",
+            natural
+        );
+
+        allModeButton.classList.toggle(
+            "active",
+            !natural
+        );
+
+        naturalModeButton.setAttribute(
+            "aria-pressed",
+            String(natural)
+        );
+
+        allModeButton.setAttribute(
+            "aria-pressed",
+            String(!natural)
+        );
+
+        document.querySelectorAll(".key").forEach(button => {
+            const isSharp =
+                button.dataset.note.includes("#");
+
+            button.disabled = natural && isSharp;
+        });
+
+        hint.textContent = natural
+            ? "Hele noten · open snaar = dubbele rand · tik op het bolletje om opnieuw te horen"
+            : "Hele + halve noten · tik op het bolletje om opnieuw te horen";
+    }
+
+    function getPositionPool() {
+        if (mode === "natural") {
+            return positions.filter(position =>
+                naturalNotes.has(position.note)
+            );
+        }
+
+        return positions;
+    }
+
+    /* QUESTION CONTROL */
+
+    function clearTimer() {
+        if (questionTimer !== null) {
+            clearTimeout(questionTimer);
+            questionTimer = null;
+        }
+    }
+
+    function clearDot() {
+        game.querySelectorAll(".dot").forEach(dot => {
+            dot.remove();
+        });
+    }
+
+    function choosePosition(pool) {
+        if (pool.length === 0) {
+            return null;
+        }
+
+        if (pool.length === 1) {
+            return pool[0];
+        }
+
+        let candidate;
+
+        do {
+            candidate =
+                pool[Math.floor(Math.random() * pool.length)];
+        } while (
+            activePosition &&
+            candidate.midi === activePosition.midi &&
+            candidate.element === activePosition.element
+        );
+
+        return candidate;
+    }
+
+    /* SHOW QUESTION */
+
+    async function showNextQuestion() {
+        if (!playing || !started) {
+            return;
+        }
+
+        clearTimer();
+        clearDot();
+
+        answerLocked = false;
+
+        const pool = getPositionPool();
+        activePosition = choosePosition(pool);
+
+        if (!activePosition) {
+            message.textContent =
+                "Geen beschikbare noten.";
+            return;
+        }
+
+        const dot = document.createElement("button");
+
+        dot.type = "button";
+        dot.className = "dot";
+
+        if (activePosition.open) {
+            dot.classList.add("open");
+        }
+
+        dot.title = "Tik om de toon opnieuw te horen";
+
+        dot.setAttribute(
+            "aria-label",
+            "Speel de gevraagde toon opnieuw af"
+        );
+
+        dot.addEventListener("click", async event => {
+            event.stopPropagation();
+
+            if (!playing || !activePosition) {
+                return;
+            }
+
+            await playKarplusStrong(
+                activePosition.midi,
+                activePosition.stringNumber
+            );
+        });
+
+        activePosition.element.appendChild(dot);
+
+        message.textContent =
+            "Welke noot is het zwarte bolletje?";
+
+        await playKarplusStrong(
+            activePosition.midi,
+            activePosition.stringNumber
+        );
+    }
+
+    /* ANSWER */
+
+    function submitAnswer(note) {
+        if (
+            !started ||
+            !playing ||
+            !activePosition ||
+            answerLocked
+        ) {
+            return;
+        }
+
+        if (
+            mode === "natural" &&
+            note.includes("#")
+        ) {
+            return;
+        }
+
+        answerLocked = true;
+        tries += 1;
+        triesDisplay.textContent = String(tries);
+
+        const dot =
+            activePosition.element.querySelector(".dot");
+
+        if (!dot) {
+            return;
+        }
+
+        if (note === activePosition.note) {
+            score += 1;
+            scoreDisplay.textContent = String(score);
+
+            dot.classList.add("good");
+
+            message.textContent =
+                `✓ Juist! ${note} · +1 punt`;
+
+            questionTimer = window.setTimeout(
+                showNextQuestion,
+                650
+            );
+        } else {
+            dot.classList.add("bad");
+
+            message.textContent =
+                `✗ Fout. De juiste noot was ${activePosition.note}.`;
+
+            questionTimer = window.setTimeout(
+                showNextQuestion,
+                1000
+            );
+        }
+    }
+
+    /* MODE SWITCH */
+
+    async function setMode(newMode) {
+        mode = newMode;
+        updateModeInterface();
+
+        /*
+         * Voor Start verandert alleen de instelling.
+         * Tijdens het spel verschijnt meteen een nieuwe vraag.
+         */
+        if (started && playing) {
+            await showNextQuestion();
+        }
+    }
+
+    naturalModeButton.addEventListener("click", () => {
+        setMode("natural");
+    });
+
+    allModeButton.addEventListener("click", () => {
+        setMode("all");
+    });
+
+    /* PLAY / PAUSE */
+
+    playPauseButton.addEventListener("click", async () => {
+        /*
+         * PLAY begint geen nieuw spel.
+         * Eerst moet Start worden ingedrukt.
+         */
+        if (!started) {
+            message.textContent =
+                "Druk eerst op Start.";
+            return;
+        }
+
+        await unlockAudio();
+
+        playing = !playing;
+
+        playPauseButton.textContent =
+            playing ? "⏸ Pause" : "▶ PLAY";
+
+        if (playing) {
+            message.textContent = "Verder!";
+
+            if (activePosition) {
+                await playKarplusStrong(
+                    activePosition.midi,
+                    activePosition.stringNumber
+                );
+            } else {
+                await showNextQuestion();
+            }
+        } else {
+            clearTimer();
+            message.textContent = "Gepauzeerd";
+        }
+    });
+
+    /* START / RESTART */
+
+    startButton.addEventListener("click", async () => {
+        /*
+         * Start is een gebruikersinteractie en activeert
+         * daardoor ook de Web Audio API.
+         */
+        await unlockAudio();
+
+        clearTimer();
+        clearDot();
+
+        score = 0;
+        tries = 0;
+
+        scoreDisplay.textContent = "0";
+        triesDisplay.textContent = "0";
+
+        started = true;
+        playing = true;
+        answerLocked = false;
+        activePosition = null;
+
+        playPauseButton.textContent = "⏸ Pause";
+        message.textContent = "Nieuwe poging gestart.";
+
+        /*
+         * Pas nu verschijnen het eerste bolletje en geluid.
+         */
+        await showNextQuestion();
+    });
+
+    /* PHYSICAL KEYBOARD */
+
+    window.addEventListener("keydown", event => {
+        if (event.repeat) {
+            return;
+        }
+
+        if (event.code === "Space") {
+            event.preventDefault();
+            playPauseButton.click();
+            return;
+        }
+
+        if (!started || !playing) {
+            return;
+        }
+
+        const key = event.key.toUpperCase();
+
+        /*
+         * Met het fysieke toetsenbord kunnen
+         * de natuurlijke noten A tot en met G
+         * rechtstreeks worden gekozen.
+         */
+        if ("ABCDEFG".includes(key)) {
+            submitAnswer(key);
+        }
+    });
+
+    /* INITIALIZE */
+
+    buildFretboard();
+    buildAnswerKeys();
+    updateModeInterface();
+
+    /*
+     * Geen automatische vraag bij het laden.
+     * Het spel begint uitsluitend met Start.
+     */
+    playing = false;
+    started = false;
+
+    playPauseButton.textContent = "▶ PLAY";
+    message.textContent = "Druk op Start om te beginnen.";
+    soundStatus.textContent =
+        "Geluid start zodra je op Start drukt.";
+})();
+</script>
+
+</body>
+</html>
