@@ -1,31 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Gitaar Notentrainer</title>
 
 <style>
 :root {
     color-scheme: dark;
-
     --bg: #120d0a;
     --panel: #201713;
-    --panel-light: #3b2921;
-
-    --spruce: #d1a363;
-    --spruce-light: #edcc94;
-    --mahogany: #74432d;
-    --mahogany-light: #975c3b;
-    --rosewood: #38231e;
-    --rosewood-dark: #261714;
-
-    --cream: #f4ead5;
+    --wood: #74432d;
+    --light: #edcc94;
+    --rose: #38231e;
     --green: #4f9c65;
     --red: #b94c43;
-
-    --label-width: 38px;
-    --neck-width: 760px;
 }
 
 * {
@@ -34,680 +23,290 @@
 
 body {
     margin: 0;
-    padding: 18px;
-    color: #f7eee3;
     background:
-        radial-gradient(circle at top, #342319 0, var(--bg) 58%);
-    font-family:
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+        radial-gradient(
+            circle at top,
+            #342319,
+            var(--bg) 60%
+        );
+    color: #f7eee3;
+    font: 14px system-ui, sans-serif;
+}
+
+main {
+    max-width: 900px;
+    margin: auto;
+    padding:
+        max(10px, env(safe-area-inset-top))
+        8px
+        16px;
+}
+
+.top,
+.opts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-right: auto;
+}
+
+.clef {
+    font: 34px serif;
+    color: white;
 }
 
 button,
 select,
 input {
-    font: inherit;
-}
-
-button {
-    padding: 7px 10px;
-    color: #f8ecda;
-    background:
-        linear-gradient(
-            180deg,
-            var(--mahogany-light),
-            var(--mahogany)
-        );
-    border: 1px solid #a9704b;
-    border-radius: 8px;
-    box-shadow:
-        inset 0 1px #ffffff1d,
-        0 2px 3px #0005;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    touch-action: manipulation;
-    transition:
-        background 0.15s,
-        border-color 0.15s,
-        transform 0.1s;
-}
-
-button:hover:not(:disabled) {
-    background:
-        linear-gradient(
-            180deg,
-            #ad7047,
-            #855036
-        );
-}
-
-button:active:not(:disabled) {
-    transform: translateY(1px);
-}
-
-button:focus-visible,
-select:focus-visible,
-input:focus-visible,
-a:focus-visible {
-    outline: 3px solid #f1c77f;
-    outline-offset: 2px;
-}
-
-button:disabled,
-select:disabled,
-input:disabled {
-    cursor: not-allowed;
-    opacity: 0.34;
-}
-
-#game {
-    width: min(100%, 1080px);
-    margin: auto;
-    padding: 16px;
-    overflow: hidden;
-    background:
-        linear-gradient(145deg, #241a15, var(--panel));
-    border: 1px solid #be82532b;
-    border-radius: 16px;
-    box-shadow:
-        0 18px 48px #0008,
-        inset 0 1px #ffffff0a;
-}
-
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.top {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.title {
-    display: flex;
-    gap: 7px;
-    align-items: center;
-    margin-right: auto;
-    font-size: 20px;
-    font-weight: 800;
-    white-space: nowrap;
-}
-
-.title-clef {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-family:
-        "DejaVu Serif",
-        "Times New Roman",
-        serif;
-    font-size: 39px;
-    font-weight: 400;
-    line-height: 0.82;
-    text-shadow: 0 2px 4px #000a;
-    transform: translateY(1px);
-    pointer-events: none;
-    user-select: none;
-}
-
-.stat {
-    padding: 6px 8px;
-    background:
-        linear-gradient(180deg, #473129, var(--panel-light));
-    border: 1px solid #8e634c;
-    border-radius: 8px;
-    font-size: 12px;
-    white-space: nowrap;
-}
-
-.mode {
-    display: flex;
-    gap: 3px;
-    padding: 3px;
-    background: var(--rosewood-dark);
-    border: 1px solid #68453a;
-    border-radius: 9px;
-}
-
-.mode button {
-    min-height: 33px;
-    padding: 6px 8px;
-    color: #d8c7b0;
-    background: transparent;
-    border-color: transparent;
-    box-shadow: none;
-}
-
-.mode button:hover:not(:disabled) {
-    background: #624337;
-}
-
-.mode button.active {
-    color: #2b1a10;
-    background:
-        linear-gradient(
-            180deg,
-            var(--spruce-light),
-            var(--spruce)
-        );
-    border-color: #edca94;
-}
-
-.play {
-    min-height: 35px;
-    color: #2e1c10;
-    background:
-        linear-gradient(180deg, #e0bb7c, #bf8b50);
-    border-color: #e6c48e;
-}
-
-.start {
-    min-height: 35px;
-    background:
-        linear-gradient(180deg, #80523a, #593527);
-}
-
-.start.reset-mode {
-    background:
-        linear-gradient(180deg, #704536, #482a23);
-}
-
-.mistakes-button {
-    min-height: 35px;
-    background:
-        linear-gradient(180deg, #644238, #432b25);
-    border-color: #896052;
-}
-
-.mistakes-button.has-errors {
-    color: #ffe8df;
-    border-color: #bb7264;
-}
-
-.mistakes-button.active {
-    background:
-        linear-gradient(180deg, #8d463c, #5c2924);
-    border-color: #d48c7f;
-}
-
-.practice-mistakes-button {
-    min-height: 35px;
-    color: #2a1a10;
-    background:
-        linear-gradient(180deg, #dfbd84, #b8834f);
-    border-color: #e5c28a;
-}
-
-.practice-mistakes-button:hover:not(:disabled) {
-    background:
-        linear-gradient(180deg, #efd09a, #ca945b);
-}
-
-.practice-mistakes-button.active {
-    color: #fff4e8;
-    background:
-        linear-gradient(180deg, #8d573a, #623824);
-}
-
-/* =========================================================
-   OPTIONS
-   ========================================================= */
-
-.options-row {
-    display: flex;
-    gap: 7px;
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    margin-top: 7px;
-}
-
-.control-group {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-}
-
-.control-label {
-    color: #c9b69e;
-    font-size: 11px;
-    white-space: nowrap;
-}
-
-.compact-select,
-.round-input {
-    min-height: 35px;
-    padding: 5px 7px;
-    color: #f1dfc8;
-    background: var(--rosewood);
-    border: 1px solid #88604b;
-    border-radius: 8px;
-    font-size: 12px;
-}
-
-.round-input {
-    width: 68px;
-    font-weight: 700;
-    text-align: center;
-}
-
-.timer-toggle {
-    min-width: 108px;
-    min-height: 35px;
-    color: #ddd0c0;
-    background:
-        linear-gradient(180deg, #624239, #412a25);
-    border-color: #81594b;
-}
-
-.timer-toggle.active {
-    color: #29180f;
-    background:
-        linear-gradient(180deg, #deb374, #bd8247);
-    border-color: #e2bb80;
-}
-
-/* =========================================================
-   STATUS
-   ========================================================= */
-
-.message-row {
-    display: flex;
     min-height: 38px;
-    gap: 10px;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.msg {
-    min-height: 24px;
-    padding: 7px 0;
-    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #a9704b;
+    background:
+        linear-gradient(
+            #975c3b,
+            #74432d
+        );
+    color: #fff0dd;
     font-weight: 700;
+    padding: 6px 9px;
 }
 
-.msg.correct {
-    color: #78cf90;
+button.active {
+    background:
+        linear-gradient(
+            #edcc94,
+            #d1a363
+        );
+    color: #28180e;
 }
 
-.msg.wrong {
-    color: #ee9588;
+.stats {
+    padding: 7px;
+    background: #3b2921;
+    border-radius: 8px;
 }
 
-.msg.practice {
-    color: #dcc5a5;
-    font-weight: 600;
+.opts {
+    margin: 7px 0;
 }
 
-.sound-status {
-    color: #b9a994;
-    font-size: 10px;
-    text-align: right;
+.opts label {
+    font-size: 11px;
+    color: #c9b69e;
 }
 
-/* =========================================================
-   TIMER
-   ========================================================= */
-
-.countdown-wrap {
-    width: 100%;
-    max-width: 760px;
-    min-height: 27px;
-    margin: 0 auto 5px;
+.opts input {
+    width: 65px;
 }
 
-.countdown {
-    position: relative;
-    display: none;
-    width: 100%;
-    height: 24px;
+.status {
+    text-align: center;
+    min-height: 28px;
+}
+
+/* TIMER + PROGRESS */
+
+.timer,
+.progress {
+    height: 9px;
+    border-radius: 9px;
+    background: #33251e;
     overflow: hidden;
-    background: #30231d;
-    border: 1px solid #765646;
-    border-radius: 7px;
-    box-shadow: inset 0 1px 3px #0008;
+    margin: 5px auto;
+    max-width: 760px;
 }
 
-.countdown.visible {
+.timer {
+    display: none;
+    height: 22px;
+    position: relative;
+}
+
+.timer.on {
     display: block;
 }
 
-.timer-bar {
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 100%;
-    background:
-        linear-gradient(90deg, #4b8f5e, #7eb985);
-    transition:
-        width 0.05s linear,
-        background 0.2s;
-}
-
-.countdown.running-low .timer-bar {
-    background:
-        linear-gradient(90deg, #a93831, #d9674e);
-}
-
-.countdown.paused .timer-bar {
-    background:
-        linear-gradient(90deg, #76675a, #a69480);
-}
-
-.timer-time {
-    position: absolute;
-    z-index: 2;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 900;
-    text-shadow: 0 1px 2px #000;
-    font-variant-numeric: tabular-nums;
-}
-
-/* =========================================================
-   PROGRESS
-   ========================================================= */
-
-.progress-section {
-    width: 100%;
-    max-width: 760px;
-    margin: 0 auto 8px;
-}
-
-.progress-info {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 4px;
-    color: #aa9a86;
-    font-size: 9px;
-}
-
-.progress-track {
-    width: 100%;
-    height: 7px;
-    overflow: hidden;
-    background: #33251e;
-    border: 1px solid #ffffff0b;
-    border-radius: 999px;
-    box-shadow: inset 0 1px 2px #0008;
-}
-
-.progress-bar {
-    width: 0;
+.timer > i,
+.progress > i {
+    display: block;
     height: 100%;
-    background:
-        linear-gradient(90deg, #94603d, #d4a263);
-    border-radius: 999px;
-    transition: width 0.28s ease;
-}
-
-.progress-bar.complete {
-    background:
-        linear-gradient(90deg, #428756, #82c28f);
-}
-
-/* =========================================================
-   PRACTICE CARD
-   ========================================================= */
-
-.practice-badge {
-    display: none;
-    width: fit-content;
-    margin: 3px auto 6px;
-    padding: 4px 10px;
-    align-items: center;
-    gap: 6px;
-    color: #47321e;
-    background:
-        linear-gradient(180deg, #f0d7ad, #d6ad72);
-    border: 1px solid #9b7447;
-    border-radius: 999px;
-    box-shadow: 0 2px 5px #0004;
-    font-size: 9px;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-}
-
-.practice-badge.visible {
-    display: flex;
-}
-
-/* =========================================================
-   GUITAR
-   ========================================================= */
-
-.scroll {
-    width: 100%;
-    padding: 2px 6px 6px;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-.neck {
-    width: min(100%, var(--neck-width));
-    min-width: 640px;
-    margin: auto;
-    padding: 4px 9px 5px;
+    width: 0;
     background:
         linear-gradient(
             90deg,
-            #56361e 0%,
-            #754b28 8%,
-            #ae7947 40%,
-            #916039 70%,
-            #5b391f 100%
+            #4b8f5e,
+            #7eb985
         );
-    border: 1px solid #d6a66b45;
-    border-radius: 7px;
-    box-shadow:
-        inset 0 0 19px #291608a8,
-        inset 0 1px #e6ba8052,
-        0 6px 15px #0006;
 }
 
-.neck.practice-mode {
-    border: 2px solid #e3c28d;
-    box-shadow:
-        inset 0 0 22px #291608b8,
-        inset 0 1px #f8ddb778,
-        0 0 0 3px #e3c28d20,
-        0 6px 15px #0006;
+.timer > b {
+    position: absolute;
+    inset: 0;
+    text-align: center;
+    font-size: 11px;
+    line-height: 20px;
+}
+
+/* GUITAR NECK */
+
+.neck {
+    --label: 22px;
+
+    margin: 7px auto;
+    width: 98%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #56361e,
+            #ae7947,
+            #5b391f
+        );
+
+    padding: 3px 2px;
+    border-radius: 6px;
 }
 
 .nums,
 .string {
     display: grid;
+
     grid-template-columns:
-        var(--label-width)
-        var(--fret-columns);
+        var(--label)
+        var(--frets);
+
     align-items: center;
 }
 
 .nums {
-    height: 18px;
-    color: #261509;
-    font-size: 9px;
-    font-weight: 800;
+    height: 13px;
+    font-size: 6px;
+    color: #28170b;
     text-align: center;
 }
 
-.fret-number {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
+.string,
+.cell {
+    height: 24px;
 }
 
+/*
+ * BELANGRIJK:
+ * iedere snaarrij is opnieuw de positioning context.
+ */
 .string {
     position: relative;
-    height: 30px;
+}
+
+.label,
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
 .label {
-    position: relative;
-    z-index: 7;
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
     color: #28170b;
-    font-size: 11px;
     font-weight: 900;
-    text-shadow: 0 1px #e0ad70;
+    font-size: 8px;
 }
 
 .cell {
-    position: relative;
-    display: flex;
-    height: 30px;
-    align-items: center;
-    justify-content: center;
-    border-right:
-        var(--fret-width, 2px)
-        solid
-        var(--fret-color, #d8d4cc);
-    box-shadow:
-        inset -1px 0 #56514c,
-        inset 1px 0 #ffffff12;
+    border-right: 1px solid #ddd;
 }
 
 .cell.first {
-    border-left: 7px solid #f1e8d4;
-    box-shadow:
-        inset 2px 0 #6f6250,
-        inset -1px 0 #423a30;
+    border-left: 4px solid #f1e8d4;
 }
 
-/* Strings */
+/* HERSTELDE SNAREN */
 
-.string-line {
+.line {
     position: absolute;
-    z-index: 2;
-    top: 50%;
+
+    left: var(--label);
     right: 0;
-    left: var(--label-width);
-    height: var(--string-width);
+    top: 50%;
+
+    height: max(var(--sw), 1.25px);
+
     transform: translateY(-50%);
-    background: var(--string-color);
-    border-radius: 999px;
+
+    background: var(--sc);
+
+    border-radius: 99px;
+
     box-shadow:
         0 1px 1px #2b1a0d,
-        0 -1px #ffffff48;
-    pointer-events: none;
-}
+        0 -1px #ffffff55;
 
-.string.wound .string-line {
-    background:
-        repeating-linear-gradient(
-            90deg,
-            var(--string-color) 0,
-            var(--string-color) 3px,
-            var(--string-highlight) 3px,
-            var(--string-highlight) 4px
-        );
-}
-
-/* Fret markers */
-
-.fret-position-marker {
-    position: absolute;
     z-index: 3;
-    top: 100%;
-    left: 50%;
-    width: 8px;
-    height: 8px;
-    transform: translate(-50%, -50%);
-    background: #ead7b7;
-    border: 1px solid #6f5133;
-    border-radius: 50%;
-    opacity: 0.74;
+
     pointer-events: none;
 }
 
-/* Practice-card labels */
+/* NOTE LABELS */
 
-.fret-note-label {
+.note {
     position: absolute;
-    z-index: 4;
-    top: 50%;
-    left: 50%;
-    min-width: 19px;
-    padding: 3px 4px;
-    transform: translate(-50%, -50%);
-    color: #302014;
-    background: #f1dfc2e8;
-    border: 1px solid #725335;
-    border-radius: 4px;
-    box-shadow:
-        0 1px 2px #0005,
-        inset 0 1px #fff5;
-    font-size: 8px;
-    font-weight: 900;
-    line-height: 1;
+    z-index: 5;
+
+    padding: 2px;
+
+    min-width: 14px;
+
     text-align: center;
-    pointer-events: none;
-    user-select: none;
-}
 
-.fret-note-label.sharp {
-    color: #fff;
-    background: #342116ef;
-    border-color: #a8845d;
-}
-
-.neck.practice-mode .fret-note-label {
-    color: #24170d;
     background: #f6e7cb;
-    border-color: #8b673f;
+    color: #24170d;
+
+    border: 1px solid #8b673f;
+    border-radius: 3px;
+
+    font-size: 6px;
+    font-weight: 900;
 }
 
-.neck.practice-mode .fret-note-label.sharp {
-    color: #fff;
+.note.sharp {
     background: #352116;
-    border-color: #c29968;
+    color: #fff;
 }
 
-/* Active quiz marker */
+/* QUIZ DOT */
+
+.dot,
+.mistake {
+    position: relative;
+
+    z-index: 10;
+
+    width: 18px;
+    height: 18px;
+
+    padding: 0;
+
+    border-radius: 50%;
+}
 
 .dot {
-    position: relative;
-    z-index: 12;
-    width: 22px;
-    height: 22px;
-    padding: 0;
-    background: #101010;
-    border: 3px solid #050505;
-    border-radius: 50%;
-    box-shadow:
-        0 2px 5px #000a,
-        inset 0 1px #ffffff1c;
-}
-
-.dot.practice-hidden {
-    display: none;
+    background: #111;
+    border: 2px solid #050505;
 }
 
 .dot.open {
     position: absolute;
-    top: 50%;
+
     left: 0;
-    width: 25px;
-    height: 25px;
+    top: 50%;
+
     transform: translate(-50%, -50%);
-    border: 3px solid var(--cream);
-    box-shadow:
-        0 0 0 3px #5f4227,
-        0 2px 6px #000a;
 }
 
 .dot.good {
@@ -718,479 +317,343 @@ input:disabled {
     background: var(--red);
 }
 
-/* =========================================================
-   MISTAKE DOTS
-   ========================================================= */
+/* ERROR MARKERS */
 
-.mistake-dot {
+.mistake {
     position: absolute;
-    z-index: 9;
-    top: 50%;
-    left: 50%;
-    width: 13px;
-    height: 13px;
-    transform: translate(-50%, -50%);
-    background: #bd493f;
-    border: 2px solid #f0b6ac;
-    border-radius: 50%;
-    box-shadow:
-        0 1px 3px #0008,
-        0 0 0 1px #722a24;
-    pointer-events: none;
+
+    width: 10px;
+    height: 10px;
+
+    background: var(--red);
+
+    border: 1px solid #efaea5;
 }
 
-.mistake-dot.open {
-    left: 0;
-    width: 14px;
-    height: 14px;
+/* ANSWERS */
+
+.answers {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, 1fr);
+
+    gap: 5px;
+
+    margin-top: 8px;
 }
 
-.mistake-dot.multiple::after {
-    content: attr(data-count);
-    position: absolute;
-    top: -7px;
-    right: -7px;
-    display: flex;
-    min-width: 13px;
-    height: 13px;
-    padding: 0 2px;
-    align-items: center;
-    justify-content: center;
+.answers button {
+    min-width: 0;
+
+    background:
+        linear-gradient(
+            #f0d39e,
+            #cf9c5d
+        );
+
+    color: #28180e;
+}
+
+.answers button.sharp {
+    background:
+        linear-gradient(
+            #624137,
+            #35231e
+        );
+
     color: #fff;
-    background: #67241f;
-    border: 1px solid #efada3;
-    border-radius: 999px;
-    font-size: 7px;
-    font-weight: 900;
 }
 
-/* =========================================================
-   ANSWER BUTTONS
-   ========================================================= */
+.small {
+    font-size: 8px;
+    opacity: .65;
+}
 
-.answer-keys {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    flex-wrap: wrap;
+.credits {
+    text-align: center;
+
+    color: #c0ad96;
+
+    font-size: 10px;
+
     margin-top: 12px;
 }
 
-.key {
+.credits a {
+    color: #edcc94;
+}
+
+/* LANGUAGE */
+
+.lang {
     display: flex;
-    min-width: 53px;
-    min-height: 52px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 7px 10px;
-    color: #2a1a10;
+
+    gap: 2px;
+
+    padding: 2px;
+
+    background: #261714;
+
+    border-radius: 8px;
+}
+
+.lang button {
+    min-width: 34px;
+
+    padding: 4px;
+
+    background: transparent;
+
+    border-color: transparent;
+}
+
+.lang button.active {
     background:
-        linear-gradient(180deg, #f0d39e, #cf9c5d);
-    border-color: #e5bf83;
+        linear-gradient(
+            #edcc94,
+            #d1a363
+        );
+
+    color: #28180e;
 }
 
-.key:hover:not(:disabled) {
-    background:
-        linear-gradient(180deg, #f6dfb3, #d9aa6d);
+.settingsToggle {
+    display: none;
 }
 
-.key.sharp {
-    color: #fff;
-    background:
-        linear-gradient(180deg, #624137, #35231e);
-    border-color: #8e6656;
-}
+/* DESKTOP */
 
-.key.sharp:hover:not(:disabled) {
-    background:
-        linear-gradient(180deg, #765043, #432c25);
-}
+@media (min-width: 701px) {
 
-.note-main {
-    font-size: 16px;
-    font-weight: 800;
-    line-height: 1.05;
-    pointer-events: none;
-    user-select: none;
-}
+    .neck {
+        --label: 38px;
 
-.note-solfege {
-    margin-top: 4px;
-    font-size: 9px;
-    font-style: italic;
-    font-weight: 400;
-    line-height: 1;
-    opacity: 0.58;
-    pointer-events: none;
-    user-select: none;
-}
-
-.key.sharp .note-solfege {
-    color: #e2d2c2;
-}
-
-.hint {
-    margin-top: 9px;
-    color: #bba991;
-    font-size: 11px;
-    line-height: 1.45;
-    text-align: center;
-}
-
-/* =========================================================
-   CREDIT
-   ========================================================= */
-
-.credits {
-    display: flex;
-    gap: 7px;
-    align-items: center;
-    justify-content: center;
-    margin-top: 14px;
-    color: #c0ad96;
-    font-size: 10px;
-    font-style: italic;
-    opacity: 0.92;
-}
-
-.credit-mail {
-    display: inline-flex;
-    width: 24px;
-    height: 24px;
-    align-items: center;
-    justify-content: center;
-    color: #e0caae;
-    font-size: 14px;
-    font-style: normal;
-    text-decoration: none;
-    background: var(--rosewood);
-    border: 1px solid #87634e;
-    border-radius: 50%;
-}
-
-.credit-mail:hover {
-    color: #27170d;
-    background: var(--spruce-light);
-    border-color: var(--spruce-light);
-}
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 700px) {
-    :root {
-        --label-width: 22px;
+        width: 760px;
     }
+
+    .string,
+    .cell {
+        height: 30px;
+    }
+
+    .nums {
+        height: 18px;
+        font-size: 9px;
+    }
+
+    .label {
+        font-size: 11px;
+    }
+
+    .note {
+        font-size: 8px;
+    }
+
+    .answers {
+        display: flex;
+        justify-content: center;
+    }
+
+    .answers button {
+        min-width: 53px;
+    }
+}
+
+/* LANDSCAPE SMARTPHONE */
+
+@media (max-height: 520px) and (orientation: landscape) {
 
     body {
-        padding: 0;
-        background: var(--panel);
+        overflow: hidden;
     }
 
-    #game {
-        width: 100%;
-        min-height: 100svh;
-        padding: 7px;
-        border: 0;
-        border-radius: 0;
-        box-shadow: none;
+    main {
+        height: 100dvh;
+
+        padding: 3px 7px;
+
+        overflow: hidden;
     }
 
     .top {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 5px;
+        flex-wrap: nowrap;
+        gap: 3px;
     }
 
     .title {
-        grid-column: 1 / -1;
-        justify-content: center;
-        margin: 0;
-        font-size: 18px;
-    }
-
-    .title-clef {
-        font-size: 33px;
-    }
-
-    .stat {
-        padding: 5px;
-        font-size: 12px;
-        text-align: center;
-    }
-
-    .mode {
-        grid-column: 1 / -1;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        width: 100%;
-    }
-
-    .mode button {
-        min-height: 35px;
-    }
-
-    .play,
-    .start,
-    .mistakes-button,
-    .practice-mistakes-button {
-        width: 100%;
-        min-height: 37px;
-        padding: 5px 3px;
-    }
-
-    .options-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 5px;
-        margin-top: 5px;
-    }
-
-    .notes-control {
-        grid-column: 1 / -1;
-        display: grid;
-        grid-template-columns:
-            auto
-            minmax(0, 1fr);
-    }
-
-    .round-control {
-        display: grid;
-        grid-template-columns:
-            minmax(0, 1fr)
-            70px;
-    }
-
-    .timer-control {
-        grid-column: 1 / -1;
-        display: grid;
-        grid-template-columns:
-            minmax(0, 1fr)
-            86px;
-    }
-
-    .timer-toggle,
-    .compact-select,
-    .round-input {
-        min-height: 37px;
-    }
-
-    .timer-toggle,
-    .round-input {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .message-row {
-        display: block;
-        min-height: 38px;
-    }
-
-    .msg {
-        min-height: 22px;
-        padding: 5px 2px 1px;
         font-size: 13px;
-        text-align: center;
     }
 
-    .sound-status {
-        margin-bottom: 2px;
-        font-size: 8px;
-        text-align: center;
+    .clef {
+        font-size: 23px;
     }
 
-    .practice-badge {
-        margin: 2px auto 4px;
-        padding: 3px 8px;
-        font-size: 8px;
+    .lang {
+        padding: 1px;
     }
 
-    .countdown-wrap {
+    .lang button {
+        min-width: 26px;
         min-height: 25px;
-        margin-bottom: 4px;
+
+        padding: 1px 3px;
+
+        font-size: 9px;
     }
 
-    .progress-section {
-        margin-bottom: 5px;
+    .stats {
+        padding: 3px 5px;
+        font-size: 9px;
     }
 
-    .scroll {
-        padding: 0 0 3px;
-        overflow: visible;
+    .top > button {
+        min-height: 27px;
+
+        padding: 2px 5px;
+
+        font-size: 9px;
     }
+
+    /*
+     * Moeilijkheidskeuze wordt in landscape
+     * uit de primaire werkbalk gehouden.
+     */
+    .top #natural,
+    .top #all {
+        display: none;
+    }
+
+    .settingsToggle {
+        display: block !important;
+
+        min-width: 29px;
+        max-width: 29px;
+    }
+
+    /* INSTELLINGEN-POPUP */
+
+    .opts {
+        display: none;
+
+        position: absolute;
+
+        z-index: 100;
+
+        top: 34px;
+        right: 6px;
+
+        width: min(390px, 94vw);
+
+        padding: 7px;
+
+        background: #261a16f7;
+
+        border: 1px solid #8b604b;
+        border-radius: 9px;
+
+        box-shadow:
+            0 8px 22px #000b;
+    }
+
+    .opts.landscape-open {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 5px;
+    }
+
+    .status {
+        min-height: 16px;
+        font-size: 9px;
+    }
+
+    .timer {
+        height: 13px;
+        margin: 1px auto;
+    }
+
+    .timer b {
+        font-size: 7px;
+        line-height: 11px;
+    }
+
+    .progress {
+        height: 4px;
+
+        margin: 2px auto;
+    }
+
+    /* Compacte hals */
 
     .neck {
-        width: 96%;
-        min-width: 0;
-        margin: 0 auto;
-        padding: 3px 2px 4px;
-        border-radius: 5px;
-    }
+        width: min(94%, 720px);
 
-    .neck.practice-mode {
-        width: 98%;
+        padding: 1px;
     }
 
     .nums {
-        height: 13px;
-        font-size: 6px;
+        height: 9px;
+
+        font-size: 5px;
     }
 
     .string,
     .cell {
-        height: 23px;
+        height: 18px;
     }
 
     .label {
-        font-size: 8px;
-    }
-
-    .cell {
-        border-right-width: 1px;
-    }
-
-    .cell.first {
-        border-left-width: 4px;
-    }
-
-    .fret-position-marker {
-        width: 6px;
-        height: 6px;
-    }
-
-    .fret-note-label {
-        min-width: 13px;
-        padding: 1px 2px;
         font-size: 6px;
     }
 
-    .neck.practice-mode .fret-note-label {
-        min-width: 14px;
-        padding: 2px;
-        font-size: 6.5px;
+    .note {
+        min-width: 10px;
+
+        padding: 1px;
+
+        font-size: 5px;
     }
 
     .dot {
-        width: 18px;
-        height: 18px;
-        border-width: 2px;
+        width: 15px;
+        height: 15px;
     }
 
     .dot.open {
-        width: 21px;
-        height: 21px;
-        border-width: 2px;
-        box-shadow:
-            0 0 0 2px #5f4227,
-            0 2px 4px #0009;
-    }
-
-    .mistake-dot {
-        width: 10px;
-        height: 10px;
-        border-width: 1px;
-    }
-
-    .mistake-dot.open {
-        width: 11px;
-        height: 11px;
-    }
-
-    .answer-keys {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 5px;
-        width: 100%;
-        margin-top: 8px;
-    }
-
-    .key {
-        min-width: 0;
-        min-height: 47px;
-        padding: 4px 2px;
-    }
-
-    .note-main {
-        font-size: 15px;
-    }
-
-    .note-solfege {
-        margin-top: 2px;
-        font-size: 8px;
-    }
-
-    .hint {
-        margin-top: 6px;
-        padding: 0 4px;
-        font-size: 9px;
-    }
-
-    .credits {
-        margin-top: 9px;
-        font-size: 9px;
-    }
-}
-
-@media (max-width: 390px) {
-    :root {
-        --label-width: 20px;
-    }
-
-    #game {
-        padding: 5px;
-    }
-
-    .title {
-        font-size: 17px;
-    }
-
-    .title-clef {
-        font-size: 31px;
-    }
-
-    .neck {
-        width: 98%;
-        padding: 2px 1px 3px;
-    }
-
-    .nums {
-        height: 11px;
-        font-size: 5px;
-    }
-
-    .string,
-    .cell {
-        height: 21px;
-    }
-
-    .label {
-        font-size: 7px;
-    }
-
-    .fret-note-label {
-        min-width: 11px;
-        padding: 1px;
-        font-size: 5px;
-    }
-
-    .dot {
         width: 17px;
         height: 17px;
     }
 
-    .dot.open {
-        width: 19px;
-        height: 19px;
+    .mistake {
+        width: 8px;
+        height: 8px;
     }
 
-    .answer-keys {
-        gap: 3px;
+    /* Alle antwoordknoppen op één rij */
+
+    .answers {
+        grid-template-columns:
+            repeat(12, 1fr);
+
+        gap: 2px;
+
+        margin-top: 2px;
     }
 
-    .key {
-        min-height: 45px;
+    .answers button {
+        min-height: 27px;
+
+        padding: 1px;
+
+        font-size: 10px;
+    }
+
+    .answers .small,
+    .credits {
+        display: none;
     }
 }
 </style>
@@ -1198,2503 +661,2857 @@ input:disabled {
 
 <body>
 
-<main id="game">
+<main>
 
-    <div class="top">
+<div class="top">
 
-        <div class="title">
-            <span class="title-clef" aria-hidden="true">𝄞</span>
-            <span>Gitaar Notentrainer</span>
-        </div>
+    <div class="title">
+        <span class="clef">𝄞</span>
+        <span id="appTitle">Gitaar Notentrainer</span>
+    </div>
 
-        <div class="stat">
-            Score: <strong id="score">0</strong>
-        </div>
-
-        <div class="stat">
-            Pogingen: <strong id="tries">0</strong>
-        </div>
-
-        <div
-            class="mode"
-            role="group"
-            aria-label="Moeilijkheid">
-
-            <button
-                type="button"
-                id="naturalMode"
-                class="active"
-                aria-pressed="true">
-                Hele noten
-            </button>
-
-            <button
-                type="button"
-                id="allMode"
-                aria-pressed="false">
-                Ook halve noten
-            </button>
-
-        </div>
-
-        <button
-            type="button"
-            id="playPause"
-            class="play">
-            ▶ PLAY
+    <div class="lang">
+        <button id="langNL" class="active">
+            NL
         </button>
 
-        <button
-            type="button"
-            id="start"
-            class="start">
-            ▶ Start
+        <button id="langEN">
+            EN
         </button>
-
-        <button
-            type="button"
-            id="mistakesButton"
-            class="mistakes-button"
-            aria-pressed="false">
-            Fouten tonen (0)
-        </button>
-
-        <button
-            type="button"
-            id="practiceMistakesButton"
-            class="practice-mistakes-button"
-            disabled>
-            ↻ Fouten oefenen (0)
-        </button>
-
     </div>
 
-    <div class="options-row">
+    <span class="stats">
+        Score
+        <b id="score">0</b>
+    </span>
 
-        <div class="control-group notes-control">
+    <span class="stats">
+        Pogingen
+        <b id="tries">0</b>
+    </span>
 
-            <label
-                class="control-label"
-                for="notesDisplay">
-                Noten op hals
-            </label>
+    <button id="natural" class="active">
+        Hele noten
+    </button>
 
-            <select
-                id="notesDisplay"
-                class="compact-select">
+    <button id="all">
+        Ook halve
+    </button>
 
-                <option value="hidden" selected>
-                    Verbergen
-                </option>
+    <button id="start">
+        ▶ Start
+    </button>
 
-                <option value="all">
-                    Alle noten
-                </option>
+    <button id="errors">
+        Fouten (0)
+    </button>
 
-                <option value="natural">
-                    Hele noten
-                </option>
+    <button id="retry" disabled>
+        ↻ Fouten oefenen
+    </button>
 
-                <option value="sharp">
-                    Halve noten
-                </option>
+    <button
+        id="settingsToggle"
+        class="settingsToggle"
+        aria-expanded="false">
+        ⚙
+    </button>
 
-            </select>
+</div>
 
-        </div>
 
-        <div class="control-group round-control">
+<div
+    id="settingsPanel"
+    class="opts">
 
-            <label
-                class="control-label"
-                for="roundSize">
-                Noten per ronde
-            </label>
+    <label>
+        <span id="notesLabel">
+            Noten op hals
+        </span>
 
-            <input
-                id="roundSize"
-                class="round-input"
-                type="number"
-                value="5"
-                min="5"
-                max="50"
-                step="5"
-                inputmode="numeric"
-                aria-label="Aantal noten per ronde">
+        <select id="show">
 
-        </div>
+            <option value="none">
+                Verbergen
+            </option>
 
-        <div class="control-group timer-control">
+            <option value="all">
+                Alle
+            </option>
 
-            <button
-                type="button"
-                id="timerToggle"
-                class="timer-toggle"
-                aria-pressed="false">
-                ⏱ Timer: UIT
-            </button>
+            <option value="natural">
+                Hele
+            </option>
 
-            <select
-                id="timerSeconds"
-                class="compact-select"
-                disabled>
+            <option value="sharp">
+                Halve
+            </option>
 
-                <option value="3">3 sec</option>
-                <option value="5" selected>5 sec</option>
-                <option value="10">10 sec</option>
-                <option value="15">15 sec</option>
+        </select>
+    </label>
 
-            </select>
 
-        </div>
+    <label>
+        <span id="roundLabel">
+            Noten per ronde
+        </span>
 
-    </div>
+        <input
+            id="round"
+            type="number"
+            min="5"
+            max="50"
+            step="5"
+            value="5">
+    </label>
 
-    <div class="message-row">
 
-        <div
-            id="message"
-            class="msg"
-            aria-live="polite">
-            Druk op Start om te beginnen.
-        </div>
+    <button id="timerBtn">
+        ⏱ Timer UIT
+    </button>
 
-        <div
-            id="soundStatus"
-            class="sound-status">
-            Geluid start zodra je op Start drukt.
-        </div>
 
-    </div>
+    <select
+        id="seconds"
+        disabled>
 
-    <div class="countdown-wrap">
+        <option>3</option>
 
-        <div
-            id="countdown"
-            class="countdown"
-            role="timer">
+        <option selected>
+            5
+        </option>
 
-            <div
-                id="timerBar"
-                class="timer-bar">
-            </div>
+        <option>10</option>
 
-            <div
-                id="timerTime"
-                class="timer-time">
-            </div>
+        <option>15</option>
 
-        </div>
+    </select>
 
-    </div>
+</div>
 
-    <div class="progress-section">
 
-        <div class="progress-info">
-            <span id="progressLabel">Ronde</span>
-            <span id="progressText">0 / 5</span>
-        </div>
+<div
+    id="msg"
+    class="status">
 
-        <div class="progress-track">
-            <div
-                id="progressBar"
-                class="progress-bar">
-            </div>
-        </div>
+    Druk op Start om te beginnen.
 
-    </div>
+</div>
 
-    <div
-        id="practiceBadge"
-        class="practice-badge">
 
-        <span aria-hidden="true">▦</span>
-        <span>OEFENKAART</span>
+<div
+    id="timer"
+    class="timer">
 
-    </div>
+    <i id="timerBar"></i>
 
-    <div class="scroll">
+    <b id="timerText"></b>
 
-        <div
-            id="neck"
-            class="neck"
-            aria-label="Klassieke gitaarhals tot de twaalfde fret">
-        </div>
+</div>
 
-    </div>
 
-    <div
-        id="answerKeys"
-        class="answer-keys"
-        aria-label="Antwoordknoppen">
-    </div>
+<div class="progress">
+    <i id="progress"></i>
+</div>
 
-    <div id="hint" class="hint">
-        Ronde van 5 noten · open snaar = dubbele rand
-    </div>
 
-    <div class="credits">
+<div
+    id="neck"
+    class="neck">
+</div>
 
-        <span>Prompt-fluisteraar: Bart Bervoets</span>
 
-        <a
-            class="credit-mail"
-            href="mailto:bart.bervoets3@gmail.com"
-            title="Stuur Bart een e-mail"
-            aria-label="Stuur een e-mail naar Bart Bervoets">
-            ✉
-        </a>
+<div
+    id="answers"
+    class="answers">
+</div>
 
-    </div>
+
+<div class="credits">
+
+    Prompt-fluisteraar:
+    Bart Bervoets ·
+
+    <a href="mailto:bart.bervoets3@gmail.com">
+        ✉
+    </a>
+
+</div>
 
 </main>
 
+
 <script>
-(() => {
-    "use strict";
+const q = selector =>
+    document.querySelector(selector);
 
-    /* =====================================================
-       DOM
-       ===================================================== */
 
-    const game =
-        document.querySelector("#game");
+/* =========================================================
+   LANGUAGE
+   ========================================================= */
 
-    const neck =
-        document.querySelector("#neck");
+const langNL =
+    q("#langNL");
 
-    const scoreDisplay =
-        document.querySelector("#score");
+const langEN =
+    q("#langEN");
 
-    const triesDisplay =
-        document.querySelector("#tries");
+const appTitle =
+    q("#appTitle");
 
-    const message =
-        document.querySelector("#message");
+const notesLabel =
+    q("#notesLabel");
 
-    const soundStatus =
-        document.querySelector("#soundStatus");
+const roundLabel =
+    q("#roundLabel");
 
-    const playPauseButton =
-        document.querySelector("#playPause");
+const settingsToggle =
+    q("#settingsToggle");
 
-    const startButton =
-        document.querySelector("#start");
+const settingsPanel =
+    q("#settingsPanel");
 
-    const mistakesButton =
-        document.querySelector("#mistakesButton");
 
-    const practiceMistakesButton =
-        document.querySelector("#practiceMistakesButton");
+let language =
+    "nl";
 
-    const naturalModeButton =
-        document.querySelector("#naturalMode");
 
-    const allModeButton =
-        document.querySelector("#allMode");
+const tr = {
 
-    const notesDisplay =
-        document.querySelector("#notesDisplay");
+    nl: {
 
-    const roundSize =
-        document.querySelector("#roundSize");
+        title:
+            "Gitaar Notentrainer",
 
-    const timerToggle =
-        document.querySelector("#timerToggle");
+        natural:
+            "Hele noten",
 
-    const timerSeconds =
-        document.querySelector("#timerSeconds");
+        all:
+            "Ook halve",
 
-    const countdown =
-        document.querySelector("#countdown");
+        start:
+            "Start",
 
-    const timerBar =
-        document.querySelector("#timerBar");
+        reset:
+            "Reset",
 
-    const timerTime =
-        document.querySelector("#timerTime");
+        errors:
+            "Fouten tonen",
 
-    const progressLabel =
-        document.querySelector("#progressLabel");
+        hideErrors:
+            "Fouten verbergen",
 
-    const progressBar =
-        document.querySelector("#progressBar");
+        retry:
+            "Fouten oefenen",
 
-    const progressText =
-        document.querySelector("#progressText");
+        notes:
+            "Noten op hals",
 
-    const practiceBadge =
-        document.querySelector("#practiceBadge");
+        round:
+            "Noten per ronde",
 
-    const answerKeys =
-        document.querySelector("#answerKeys");
+        hide:
+            "Verbergen",
 
-    const hint =
-        document.querySelector("#hint");
+        allNotes:
+            "Alle",
 
-    /* =====================================================
-       CONSTANTS AND DATA
-       ===================================================== */
+        naturalNotes:
+            "Hele",
 
-    const fretCount = 12;
-    const scaleLengthMm = 650;
+        sharps:
+            "Halve",
 
-    const strings = [
-        {
-            name: "E",
-            midi: 64,
-            number: 1,
-            width: 1,
-            color: "#f8f2e3",
-            highlight: "#ffffff",
-            wound: false
-        },
-        {
-            name: "B",
-            midi: 59,
-            number: 2,
-            width: 1.4,
-            color: "#eee4cf",
-            highlight: "#ffffff",
-            wound: false
-        },
-        {
-            name: "G",
-            midi: 55,
-            number: 3,
-            width: 2,
-            color: "#ded0b6",
-            highlight: "#f8edd8",
-            wound: false
-        },
-        {
-            name: "D",
-            midi: 50,
-            number: 4,
-            width: 2.9,
-            color: "#a99373",
-            highlight: "#d2c1a4",
-            wound: true
-        },
-        {
-            name: "A",
-            midi: 45,
-            number: 5,
-            width: 4,
-            color: "#8c7455",
-            highlight: "#c4ad8a",
-            wound: true
-        },
-        {
-            name: "E",
-            midi: 40,
-            number: 6,
-            width: 5.1,
-            color: "#715a41",
-            highlight: "#aa9070",
-            wound: true
-        }
+        timerOn:
+            "Timer AAN",
+
+        timerOff:
+            "Timer UIT",
+
+        press:
+            "Druk op Start om te beginnen.",
+
+        practice:
+            "OEFENKAART",
+
+        correct:
+            "Juist",
+
+        correctNote:
+            "Juiste noot",
+
+        time:
+            "Tijd om",
+
+        complete:
+            "Ronde voltooid"
+    },
+
+
+    en: {
+
+        title:
+            "Guitar Note Trainer",
+
+        natural:
+            "Natural notes",
+
+        all:
+            "Include sharps",
+
+        start:
+            "Start",
+
+        reset:
+            "Reset",
+
+        errors:
+            "Show mistakes",
+
+        hideErrors:
+            "Hide mistakes",
+
+        retry:
+            "Practice mistakes",
+
+        notes:
+            "Notes on neck",
+
+        round:
+            "Notes per round",
+
+        hide:
+            "Hide",
+
+        allNotes:
+            "All",
+
+        naturalNotes:
+            "Natural",
+
+        sharps:
+            "Sharps",
+
+        timerOn:
+            "Timer ON",
+
+        timerOff:
+            "Timer OFF",
+
+        press:
+            "Press Start to begin.",
+
+        practice:
+            "PRACTICE MAP",
+
+        correct:
+            "Correct",
+
+        correctNote:
+            "Correct note",
+
+        time:
+            "Time's up",
+
+        complete:
+            "Round complete"
+    }
+
+};
+
+
+function T(key) {
+
+    return tr[language][key];
+
+}
+
+
+/* =========================================================
+   MUSIC DATA
+   ========================================================= */
+
+const notes = [
+
+    "C",
+    "C#",
+    "D",
+    "D#",
+    "E",
+    "F",
+    "F#",
+    "G",
+    "G#",
+    "A",
+    "A#",
+    "B"
+
+];
+
+
+const naturalSet =
+    new Set([
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+    ]);
+
+
+/*
+ * name
+ * midi
+ * string number
+ * visual width
+ */
+
+const strings = [
+
+    [
+        "E",
+        64,
+        1,
+        1
+    ],
+
+    [
+        "B",
+        59,
+        2,
+        1.4
+    ],
+
+    [
+        "G",
+        55,
+        3,
+        2
+    ],
+
+    [
+        "D",
+        50,
+        4,
+        2.9
+    ],
+
+    [
+        "A",
+        45,
+        5,
+        4
+    ],
+
+    [
+        "E",
+        40,
+        6,
+        5.1
+    ]
+
+];
+
+
+/* =========================================================
+   DOM
+   ========================================================= */
+
+const neck =
+    q("#neck");
+
+const answers =
+    q("#answers");
+
+const msg =
+    q("#msg");
+
+const scoreEl =
+    q("#score");
+
+const triesEl =
+    q("#tries");
+
+const start =
+    q("#start");
+
+const natural =
+    q("#natural");
+
+const all =
+    q("#all");
+
+const show =
+    q("#show");
+
+const round =
+    q("#round");
+
+const timerBtn =
+    q("#timerBtn");
+
+const seconds =
+    q("#seconds");
+
+const timer =
+    q("#timer");
+
+const timerBar =
+    q("#timerBar");
+
+const timerText =
+    q("#timerText");
+
+const progress =
+    q("#progress");
+
+const errorsBtn =
+    q("#errors");
+
+const retry =
+    q("#retry");
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let positions = [];
+
+let score = 0;
+let tries = 0;
+
+let total = 5;
+
+let playing = false;
+
+let mode =
+    "natural";
+
+let active =
+    null;
+
+let locked =
+    false;
+
+let mistakes =
+    [];
+
+let errorsVisible =
+    false;
+
+let retryMode =
+    false;
+
+let retryPool =
+    [];
+
+let timerOn =
+    false;
+
+let deadline =
+    0;
+
+let tick =
+    null;
+
+let nextTimer =
+    null;
+
+let audio =
+    null;
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function nn(midi) {
+
+    return notes[
+        midi % 12
     ];
 
-    const noteNames = [
-        "C", "C#", "D", "D#",
-        "E", "F", "F#", "G",
-        "G#", "A", "A#", "B"
-    ];
+}
 
-    const answerNotes = [
-        { note: "A",  solfege: "la" },
-        { note: "A#", solfege: "la#" },
-        { note: "B",  solfege: "si" },
-        { note: "C",  solfege: "do" },
-        { note: "C#", solfege: "do#" },
-        { note: "D",  solfege: "re" },
-        { note: "D#", solfege: "re#" },
-        { note: "E",  solfege: "mi" },
-        { note: "F",  solfege: "fa" },
-        { note: "F#", solfege: "fa#" },
-        { note: "G",  solfege: "sol" },
-        { note: "G#", solfege: "sol#" }
-    ];
 
-    const naturalNotes =
-        new Set([
-            "A", "B", "C",
-            "D", "E", "F", "G"
-        ]);
+function freq(midi) {
 
-    /* =====================================================
-       FRET GEOMETRY
-       ===================================================== */
+    return (
+        440 *
+        Math.pow(
+            2,
+            (midi - 69) / 12
+        )
+    );
 
-    function distanceFromNut(fret) {
-        return (
-            scaleLengthMm *
+}
+
+
+/* =========================================================
+   REALISTIC FRET WIDTHS
+   ========================================================= */
+
+let widths = [];
+
+
+for (
+    let fret = 1;
+    fret <= 12;
+    fret++
+) {
+
+    const position =
+        number =>
+            650 *
             (
                 1 -
                 Math.pow(
                     2,
-                    -fret / 12
+                    -number / 12
                 )
-            )
-        );
-    }
+            );
 
-    const fretWidthsMm =
-        Array.from(
-            { length: fretCount },
-            (_, index) => {
-                const fret = index + 1;
 
-                return (
-                    distanceFromNut(fret) -
-                    distanceFromNut(fret - 1)
-                );
-            }
-        );
+    widths.push(
 
-    neck.style.setProperty(
-        "--fret-columns",
-        fretWidthsMm
-            .map(width => `${width}fr`)
-            .join(" ")
+        position(fret) -
+
+        position(
+            fret - 1
+        )
+
     );
 
-    /* =====================================================
-       STATE
-       ===================================================== */
+}
 
-    const positions = [];
 
-    let totalQuestions = 5;
-    let activeRoundTotal = 5;
+neck.style.setProperty(
 
-    let score = 0;
-    let tries = 0;
+    "--frets",
 
-    let mistakes = [];
-    let mistakesVisible = false;
+    widths
+        .map(
+            width =>
+                `${width}fr`
+        )
+        .join(" ")
 
-    let mistakesPracticeMode = false;
-    let mistakesPracticePool = [];
+);
 
-    let activePosition = null;
 
-    let playing = false;
-    let started = false;
-    let roundFinished = false;
-    let answerLocked = false;
+/* =========================================================
+   BUILD NECK
+   ========================================================= */
 
-    let mode = "natural";
-    let notesDisplayMode = "hidden";
+function build() {
 
-    let questionTimer = null;
-
-    let timerEnabled = false;
-    let countdownInterval = null;
-    let timerDeadline = null;
-    let remainingTimeMs = null;
-
-    let audioContext = null;
-    let currentSource = null;
-
-    /* =====================================================
-       HELPERS
-       ===================================================== */
-
-    function isPracticeCardVisible() {
-        return notesDisplayMode !== "hidden";
-    }
-
-    function noteNameFromMidi(midi) {
-        return noteNames[midi % 12];
-    }
-
-    function midiToFrequency(midi) {
-        return (
-            440 *
-            Math.pow(
-                2,
-                (midi - 69) / 12
-            )
+    const nums =
+        document.createElement(
+            "div"
         );
-    }
 
-    function setMessage(
-        text,
-        state = ""
+
+    nums.className =
+        "nums";
+
+
+    nums.append(
+        document.createElement(
+            "div"
+        )
+    );
+
+
+    for (
+        let fret = 1;
+        fret <= 12;
+        fret++
     ) {
-        message.textContent = text;
 
-        message.classList.remove(
-            "correct",
-            "wrong",
-            "practice"
+        const element =
+            document.createElement(
+                "div"
+            );
+
+
+        element.textContent =
+            fret;
+
+
+        nums.append(
+            element
         );
 
-        if (state) {
-            message.classList.add(state);
-        }
     }
 
-    function normalizeRoundSize(value) {
-        let amount = Number(value);
 
-        if (!Number.isFinite(amount)) {
-            amount = 5;
-        }
+    neck.append(
+        nums
+    );
 
-        amount =
-            Math.round(amount / 5) * 5;
 
-        return Math.max(
-            5,
-            Math.min(
-                50,
-                amount
-            )
-        );
-    }
+    strings.forEach(
+        (
+            [
+                name,
+                base,
+                stringNumber,
+                stringWidth
+            ]
+        ) => {
 
-    function updateRoundSize() {
-        totalQuestions =
-            normalizeRoundSize(
-                roundSize.value
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "string";
+
+
+            row.style.setProperty(
+
+                "--sw",
+
+                `${stringWidth}px`
+
             );
 
-        roundSize.value =
-            String(totalQuestions);
 
-        if (
-            !started ||
-            roundFinished
-        ) {
-            activeRoundTotal =
-                totalQuestions;
+            /*
+             * Nylon treble strings are light.
+             * Bass strings use a warmer bronze colour.
+             */
 
-            updateProgress();
+            row.style.setProperty(
+
+                "--sc",
+
+                stringNumber < 4
+
+                    ?
+
+                    "#f4ead9"
+
+                    :
+
+                    "#a98b67"
+
+            );
+
+
+            const label =
+                document.createElement(
+                    "div"
+                );
+
+
+            label.className =
+                "label";
+
+
+            label.textContent =
+                name;
+
+
+            row.append(
+                label
+            );
+
+
+            const line =
+                document.createElement(
+                    "div"
+                );
+
+
+            line.className =
+                "line";
+
+
+            row.append(
+                line
+            );
+
+
+            const cells = [];
+
+
+            for (
+                let fret = 1;
+                fret <= 12;
+                fret++
+            ) {
+
+                const cell =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                cell.className =
+                    "cell" +
+                    (
+                        fret === 1
+
+                            ?
+
+                            " first"
+
+                            :
+
+                            ""
+                    );
+
+
+                row.append(
+                    cell
+                );
+
+
+                cells.push(
+                    cell
+                );
+
+
+                positions.push({
+
+                    element:
+                        cell,
+
+                    note:
+                        nn(
+                            base +
+                            fret
+                        ),
+
+                    midi:
+                        base +
+                        fret,
+
+                    fret,
+
+                    open:
+                        false,
+
+                    stringNumber
+
+                });
+
+            }
+
+
+            /*
+             * Open string.
+             */
+
+            positions.push({
+
+                element:
+                    cells[0],
+
+                note:
+                    nn(base),
+
+                midi:
+                    base,
+
+                fret:
+                    0,
+
+                open:
+                    true,
+
+                stringNumber
+
+            });
+
+
+            neck.append(
+                row
+            );
+
         }
 
-        updateModeInterface();
-    }
+    );
 
-    function updateStartButton() {
-        if (
-            started &&
-            !roundFinished &&
-            !mistakesPracticeMode
-        ) {
-            startButton.textContent =
-                "↻ Reset";
+}
 
-            startButton.classList.add(
-                "reset-mode"
+
+/* =========================================================
+   ANSWER BUTTONS
+   ========================================================= */
+
+function buildAnswers() {
+
+    const solfege = {
+
+        A: "la",
+        "A#": "la#",
+
+        B: "si",
+
+        C: "do",
+        "C#": "do#",
+
+        D: "re",
+        "D#": "re#",
+
+        E: "mi",
+
+        F: "fa",
+        "F#": "fa#",
+
+        G: "sol",
+        "G#": "sol#"
+
+    };
+
+
+    [
+
+        "A",
+        "A#",
+        "B",
+
+        "C",
+        "C#",
+
+        "D",
+        "D#",
+
+        "E",
+
+        "F",
+        "F#",
+
+        "G",
+        "G#"
+
+    ].forEach(
+        note => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.dataset.note =
+                note;
+
+
+            button.className =
+
+                note.includes("#")
+
+                    ?
+
+                    "sharp"
+
+                    :
+
+                    "";
+
+
+            button.innerHTML =
+
+                `${note}
+
+                <span class="small">
+
+                    ${solfege[note]}
+
+                </span>`;
+
+
+            button.onclick =
+                () =>
+                    answer(
+                        note
+                    );
+
+
+            answers.append(
+                button
             );
-        } else {
-            startButton.textContent =
-                "▶ Start";
 
-            startButton.classList.remove(
-                "reset-mode"
-            );
         }
-    }
 
-    /* =====================================================
-       AUDIO
-       ===================================================== */
+    );
 
-    function getAudioContext() {
-        if (!audioContext) {
-            const AudioContextClass =
+}
+
+
+/* =========================================================
+   AUDIO
+   ========================================================= */
+
+function ctx() {
+
+    if (!audio) {
+
+        audio =
+            new (
                 window.AudioContext ||
-                window.webkitAudioContext;
+                window.webkitAudioContext
+            )();
 
-            if (!AudioContextClass) {
-                soundStatus.textContent =
-                    "Web Audio API wordt niet ondersteund.";
-
-                return null;
-            }
-
-            audioContext =
-                new AudioContextClass();
-        }
-
-        return audioContext;
     }
 
-    async function unlockAudio() {
-        const context =
-            getAudioContext();
 
-        if (!context) {
-            return false;
-        }
-
-        if (context.state === "suspended") {
-            try {
-                await context.resume();
-            } catch {
-                soundStatus.textContent =
-                    "Geluid kon niet worden gestart.";
-
-                return false;
-            }
-        }
-
-        if (context.state === "running") {
-            soundStatus.textContent =
-                "🔊 Tik op het bolletje om opnieuw te horen";
-
-            return true;
-        }
-
-        return false;
-    }
-
-    async function playKarplusStrong(
-        midi,
-        stringNumber
+    if (
+        audio.state ===
+        "suspended"
     ) {
-        const unlocked =
-            await unlockAudio();
 
-        if (!unlocked) {
-            return;
-        }
+        audio.resume();
 
-        const context = audioContext;
-        const now = context.currentTime;
-        const sampleRate = context.sampleRate;
-        const frequency =
-            midiToFrequency(midi);
-
-        const delayLength =
-            Math.max(
-                2,
-                Math.round(
-                    sampleRate /
-                    frequency -
-                    0.5
-                )
-            );
-
-        const bassFactor =
-            (stringNumber - 1) / 5;
-
-        const duration =
-            2.1 +
-            bassFactor * 0.9;
-
-        const feedback =
-            0.9925 +
-            bassFactor * 0.002;
-
-        const brightness =
-            0.48 +
-            (1 - bassFactor) * 0.12;
-
-        const totalSamples =
-            Math.ceil(
-                duration *
-                sampleRate
-            );
-
-        const delay =
-            new Float32Array(delayLength);
-
-        const output =
-            new Float32Array(totalSamples);
-
-        let previousNoise = 0;
-
-        for (
-            let index = 0;
-            index < delayLength;
-            index++
-        ) {
-            const noise =
-                Math.random() * 2 - 1;
-
-            const softNoise =
-                noise * brightness +
-                previousNoise *
-                (1 - brightness);
-
-            const envelope =
-                0.72 +
-                0.28 *
-                Math.sin(
-                    Math.PI *
-                    index /
-                    delayLength
-                );
-
-            delay[index] =
-                softNoise *
-                envelope *
-                0.78;
-
-            previousNoise = noise;
-        }
-
-        let delayIndex = 0;
-        let previousSample = 0;
-
-        for (
-            let index = 0;
-            index < totalSamples;
-            index++
-        ) {
-            const current =
-                delay[delayIndex];
-
-            const next =
-                delay[
-                    (delayIndex + 1) %
-                    delayLength
-                ];
-
-            const averaged =
-                0.47 * current +
-                0.47 * next +
-                0.06 * previousSample;
-
-            const attack =
-                Math.min(
-                    1,
-                    index /
-                    Math.max(
-                        1,
-                        sampleRate * 0.004
-                    )
-                );
-
-            const remaining =
-                totalSamples - index;
-
-            const release =
-                Math.min(
-                    1,
-                    remaining /
-                    Math.max(
-                        1,
-                        sampleRate * 0.08
-                    )
-                );
-
-            output[index] =
-                current *
-                attack *
-                release;
-
-            delay[delayIndex] =
-                averaged * feedback;
-
-            previousSample = current;
-
-            delayIndex =
-                (delayIndex + 1) %
-                delayLength;
-        }
-
-        const buffer =
-            context.createBuffer(
-                1,
-                totalSamples,
-                sampleRate
-            );
-
-        buffer.copyToChannel(output, 0);
-
-        if (currentSource) {
-            try {
-                currentSource.stop();
-            } catch {}
-        }
-
-        const source =
-            context.createBufferSource();
-
-        source.buffer = buffer;
-
-        const body =
-            context.createBiquadFilter();
-
-        body.type = "peaking";
-        body.frequency.value = 205;
-        body.Q.value = 1.15;
-        body.gain.value = 4.1;
-
-        const warmth =
-            context.createBiquadFilter();
-
-        warmth.type = "lowpass";
-
-        warmth.frequency.value =
-            2800 +
-            (1 - bassFactor) * 1300;
-
-        warmth.Q.value = 0.72;
-
-        const master =
-            context.createGain();
-
-        master.gain.setValueAtTime(
-            0.0001,
-            now
-        );
-
-        master.gain.exponentialRampToValueAtTime(
-            0.48,
-            now + 0.008
-        );
-
-        master.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + duration
-        );
-
-        source.connect(body);
-        body.connect(warmth);
-        warmth.connect(master);
-        master.connect(context.destination);
-
-        source.addEventListener(
-            "ended",
-            () => {
-                if (currentSource === source) {
-                    currentSource = null;
-                }
-            }
-        );
-
-        currentSource = source;
-        source.start(now);
     }
 
-    function playCorrectSound() {
-        const context = getAudioContext();
 
-        if (
-            !context ||
-            context.state !== "running"
-        ) {
-            return;
-        }
+    return audio;
 
-        const now = context.currentTime;
+}
 
-        [
-            { midi: 72, delay: 0 },
-            { midi: 76, delay: 0.065 },
-            { midi: 79, delay: 0.13 }
-        ].forEach(item => {
+
+function tone(
+    midi,
+    stringNumber
+) {
+
+    const context =
+        ctx();
+
+
+    const now =
+        context.currentTime;
+
+
+    const oscillator =
+        context.createOscillator();
+
+
+    const gain =
+        context.createGain();
+
+
+    const filter =
+        context.createBiquadFilter();
+
+
+    oscillator.type =
+        "triangle";
+
+
+    oscillator.frequency.value =
+        freq(midi);
+
+
+    filter.type =
+        "lowpass";
+
+
+    filter.frequency.value =
+
+        1800 +
+
+        (
+            6 -
+            stringNumber
+        )
+        *
+        350;
+
+
+    gain.gain.setValueAtTime(
+
+        0.0001,
+
+        now
+
+    );
+
+
+    gain.gain
+        .exponentialRampToValueAtTime(
+
+            0.22,
+
+            now + 0.01
+
+        );
+
+
+    gain.gain
+        .exponentialRampToValueAtTime(
+
+            0.0001,
+
+            now + 1.1
+
+        );
+
+
+    oscillator.connect(
+        filter
+    );
+
+
+    filter.connect(
+        gain
+    );
+
+
+    gain.connect(
+        context.destination
+    );
+
+
+    oscillator.start();
+
+
+    oscillator.stop(
+        now + 1.15
+    );
+
+}
+
+
+/* =========================================================
+   CORRECT SOUND
+   ========================================================= */
+
+function good() {
+
+    const context =
+        ctx();
+
+
+    const now =
+        context.currentTime;
+
+
+    [
+        72,
+        76,
+        79
+    ].forEach(
+        (
+            midi,
+            index
+        ) => {
+
             const oscillator =
                 context.createOscillator();
+
 
             const gain =
                 context.createGain();
 
-            const start =
-                now + item.delay;
 
-            oscillator.type = "sine";
+            const time =
 
-            oscillator.frequency.setValueAtTime(
-                midiToFrequency(item.midi),
-                start
-            );
+                now +
+
+                index *
+                0.065;
+
+
+            oscillator.frequency.value =
+                freq(midi);
+
 
             gain.gain.setValueAtTime(
+
                 0.0001,
-                start
+
+                time
+
             );
 
+
             gain.gain.exponentialRampToValueAtTime(
+
                 0.07,
-                start + 0.008
+
+                time + 0.01
+
             );
+
 
             gain.gain.exponentialRampToValueAtTime(
+
                 0.0001,
-                start + 0.18
+
+                time + 0.18
+
             );
 
-            oscillator.connect(gain);
-            gain.connect(context.destination);
 
-            oscillator.start(start);
-            oscillator.stop(start + 0.2);
-        });
-    }
+            oscillator.connect(
+                gain
+            );
 
-    function playWrongSound() {
-        const context = getAudioContext();
 
-        if (
-            !context ||
-            context.state !== "running"
-        ) {
-            return;
+            gain.connect(
+                context.destination
+            );
+
+
+            oscillator.start(
+                time
+            );
+
+
+            oscillator.stop(
+                time + 0.2
+            );
+
         }
 
-        const now = context.currentTime;
+    );
 
-        const oscillator =
-            context.createOscillator();
+}
 
-        const formant =
-            context.createBiquadFilter();
 
-        const gain =
-            context.createGain();
+/* =========================================================
+   WRONG SOUND
+   ========================================================= */
 
-        oscillator.type = "sine";
+function bad() {
 
-        oscillator.frequency.setValueAtTime(
-            185,
-            now
-        );
+    const context =
+        ctx();
 
-        oscillator.frequency.exponentialRampToValueAtTime(
-            122,
-            now + 0.42
-        );
 
-        formant.type = "bandpass";
-        formant.frequency.value = 480;
-        formant.Q.value = 1.2;
+    const now =
+        context.currentTime;
 
-        gain.gain.setValueAtTime(
-            0.0001,
-            now
-        );
 
-        gain.gain.exponentialRampToValueAtTime(
-            0.11,
-            now + 0.025
-        );
+    const oscillator =
+        context.createOscillator();
 
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + 0.44
-        );
 
-        oscillator.connect(formant);
-        formant.connect(gain);
-        gain.connect(context.destination);
+    const gain =
+        context.createGain();
 
-        oscillator.start(now);
-        oscillator.stop(now + 0.46);
-    }
 
-    /* =====================================================
-       MISTAKES
-       ===================================================== */
+    oscillator.frequency.setValueAtTime(
 
-    function recordMistake(
-        selectedNote,
-        timeout = false
-    ) {
-        if (!activePosition) {
-            return;
-        }
+        185,
 
-        mistakes.push({
-            element:
-                activePosition.element,
-            midi:
-                activePosition.midi,
-            fret:
-                activePosition.fret,
-            stringNumber:
-                activePosition.stringNumber,
-            note:
-                activePosition.note,
-            selected:
-                timeout
-                    ? "Tijd"
-                    : selectedNote
-        });
+        now
 
-        updateMistakes();
-    }
+    );
 
-    function getUniqueMistakePositions() {
-        const unique =
-            new Map();
 
-        mistakes.forEach(mistake => {
-            const key =
-                `${mistake.stringNumber}-${mistake.fret}`;
+    oscillator.frequency.exponentialRampToValueAtTime(
 
-            if (!unique.has(key)) {
-                unique.set(key, mistake);
-            }
-        });
+        122,
 
-        return Array.from(
-            unique.values()
-        );
-    }
+        now + 0.4
 
-    function buildMistakesPracticePool() {
-        return getUniqueMistakePositions()
-            .map(mistake => ({
-                element:
-                    mistake.element,
-                midi:
-                    mistake.midi,
-                fret:
-                    mistake.fret,
-                open:
-                    mistake.fret === 0,
-                stringNumber:
-                    mistake.stringNumber,
-                note:
-                    mistake.note
-            }));
-    }
+    );
 
-    function updateMistakePracticeButton() {
-        const uniqueCount =
-            getUniqueMistakePositions().length;
 
-        practiceMistakesButton.disabled =
-            uniqueCount === 0 &&
-            !mistakesPracticeMode;
+    gain.gain.setValueAtTime(
 
-        practiceMistakesButton.classList.toggle(
-            "active",
-            mistakesPracticeMode
-        );
+        0.0001,
 
-        practiceMistakesButton.textContent =
-            mistakesPracticeMode
-                ? "■ Stop fouten oefenen"
-                : `↻ Fouten oefenen (${uniqueCount})`;
-    }
+        now
 
-    function updateMistakes() {
-        game
-            .querySelectorAll(
-                ".mistake-dot"
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+
+        0.1,
+
+        now + 0.02
+
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+
+        0.0001,
+
+        now + 0.42
+
+    );
+
+
+    oscillator.connect(
+        gain
+    );
+
+
+    gain.connect(
+        context.destination
+    );
+
+
+    oscillator.start(
+        now
+    );
+
+
+    oscillator.stop(
+        now + 0.44
+    );
+
+}
+
+
+/* =========================================================
+   ROUND SIZE
+   ========================================================= */
+
+function normRound() {
+
+    let value =
+
+        Math.round(
+
+            (
+                Number(
+                    round.value
+                )
+                ||
+                5
             )
-            .forEach(marker => {
-                marker.remove();
-            });
+            /
+            5
 
-        const groupedPositions =
-            new Map();
+        )
+        *
+        5;
 
-        mistakes.forEach(mistake => {
-            const key =
-                `${mistake.stringNumber}-${mistake.fret}`;
 
-            if (!groupedPositions.has(key)) {
-                groupedPositions.set(
-                    key,
-                    {
-                        ...mistake,
-                        count: 1
-                    }
-                );
-            } else {
-                groupedPositions.get(key).count += 1;
-            }
-        });
+    return Math.max(
 
-        const uniqueCount =
-            groupedPositions.size;
+        5,
 
-        mistakesButton.textContent =
-            mistakesVisible
-                ? `Fouten verbergen (${uniqueCount})`
-                : `Fouten tonen (${uniqueCount})`;
+        Math.min(
 
-        mistakesButton.classList.toggle(
-            "has-errors",
-            uniqueCount > 0
-        );
+            50,
 
-        mistakesButton.classList.toggle(
-            "active",
-            mistakesVisible
-        );
+            value
 
-        mistakesButton.setAttribute(
-            "aria-pressed",
-            String(mistakesVisible)
-        );
+        )
 
-        updateMistakePracticeButton();
+    );
 
-        if (
-            !mistakesVisible ||
-            uniqueCount === 0
-        ) {
-            return;
-        }
+}
 
-        groupedPositions.forEach(mistake => {
-            const marker =
-                document.createElement("span");
 
-            marker.className =
-                "mistake-dot";
+/* =========================================================
+   PROGRESS
+   ========================================================= */
 
-            if (mistake.fret === 0) {
-                marker.classList.add("open");
-            }
+function updateProgress() {
 
-            if (mistake.count > 1) {
-                marker.classList.add("multiple");
+    progress.style.width =
 
-                marker.dataset.count =
-                    String(mistake.count);
-            }
-
-            marker.title =
-                mistake.fret === 0
-                    ? `Snaar ${mistake.stringNumber}, open ${mistake.note}`
-                    : `Snaar ${mistake.stringNumber}, fret ${mistake.fret}, ${mistake.note}`;
-
-            mistake.element.appendChild(marker);
-        });
-    }
-
-    function resetMistakes() {
-        mistakes = [];
-        mistakesVisible = false;
-
-        mistakesPracticeMode = false;
-        mistakesPracticePool = [];
-
-        updateMistakes();
-    }
-
-    /* =====================================================
-       PROGRESS AND ROUND
-       ===================================================== */
-
-    function updateProgress() {
-        const safeTotal =
-            Math.max(
-                1,
-                activeRoundTotal
-            );
-
-        const completed =
+        (
             Math.min(
                 tries,
-                safeTotal
-            );
-
-        progressBar.style.width =
-            `${completed / safeTotal * 100}%`;
-
-        progressText.textContent =
-            `${completed} / ${safeTotal}`;
-
-        progressLabel.textContent =
-            mistakesPracticeMode
-                ? "Fouten oefenen"
-                : "Ronde";
-
-        progressBar.classList.toggle(
-            "complete",
-            completed >= safeTotal
-        );
-    }
-
-    function clearQuestionTimer() {
-        if (questionTimer !== null) {
-            window.clearTimeout(questionTimer);
-            questionTimer = null;
-        }
-    }
-
-    function finishRound() {
-        stopCountdown(true);
-        clearQuestionTimer();
-
-        playing = false;
-        roundFinished = true;
-        answerLocked = true;
-
-        playPauseButton.textContent =
-            "▶ PLAY";
-
-        playPauseButton.disabled = true;
-
-        roundSize.disabled = false;
-
-        progressBar.style.width =
-            "100%";
-
-        progressBar.classList.add(
-            "complete"
-        );
-
-        updateStartButton();
-        updateModeInterface();
-
-        if (mistakesPracticeMode) {
-            setMessage(
-                `Foutenoefening voltooid: ${score} / ${activeRoundTotal} juist.`,
-                score === activeRoundTotal
-                    ? "correct"
-                    : ""
-            );
-        } else {
-            setMessage(
-                `Ronde voltooid: ${score} / ${activeRoundTotal} juist. Druk op Start voor een nieuwe ronde.`,
-                score / activeRoundTotal >= 0.75
-                    ? "correct"
-                    : ""
-            );
-        }
-    }
-
-    function continueOrFinish(delay) {
-        updateProgress();
-
-        questionTimer =
-            window.setTimeout(
-                tries >= activeRoundTotal
-                    ? finishRound
-                    : showNextQuestion,
-                delay
-            );
-    }
-
-    /* =====================================================
-       TIMER
-       ===================================================== */
-
-    function getSelectedTimerMs() {
-        const seconds =
-            Number(timerSeconds.value);
-
-        return Number.isFinite(seconds)
-            ? Math.max(
-                1000,
-                Math.min(
-                    60000,
-                    seconds * 1000
-                )
+                total
             )
-            : 5000;
+            /
+            total
+            *
+            100
+        )
+        +
+        "%";
+
+}
+
+
+/* =========================================================
+   QUESTION POOL
+   ========================================================= */
+
+function pool() {
+
+    if (retryMode) {
+
+        return retryPool;
+
     }
 
-    function updateCountdownDisplay(
-        milliseconds,
-        paused = false
+
+    if (
+        mode ===
+        "natural"
     ) {
-        if (!timerEnabled) {
-            countdown.classList.remove(
-                "visible",
-                "running-low",
-                "paused"
-            );
 
-            timerBar.style.width = "100%";
-            timerTime.textContent = "";
-            return;
-        }
+        return positions.filter(
 
-        const remaining =
-            Math.max(
-                0,
-                Number.isFinite(milliseconds)
-                    ? milliseconds
-                    : 0
-            );
+            position =>
 
-        timerBar.style.width =
-            `${Math.min(
-                100,
-                remaining /
-                getSelectedTimerMs() *
-                100
-            )}%`;
+                naturalSet.has(
+                    position.note
+                )
 
-        timerTime.textContent =
-            paused
-                ? `⏸ ${(remaining / 1000).toFixed(1)} s`
-                : `${(remaining / 1000).toFixed(1)} s`;
-
-        countdown.classList.add("visible");
-
-        countdown.classList.toggle(
-            "running-low",
-            !paused &&
-            remaining <= 2000
         );
 
-        countdown.classList.toggle(
-            "paused",
-            paused
+    }
+
+
+    return positions;
+
+}
+
+
+/* =========================================================
+   DOT
+   ========================================================= */
+
+function clearDot() {
+
+    document
+        .querySelectorAll(
+            ".dot"
+        )
+        .forEach(
+            element =>
+                element.remove()
         );
-    }
 
-    function clearCountdownInterval() {
-        if (countdownInterval !== null) {
-            window.clearInterval(
-                countdownInterval
-            );
+}
 
-            countdownInterval = null;
-        }
-    }
 
-    function stopCountdown(
-        clearRemaining = true
+/* =========================================================
+   TIMER
+   ========================================================= */
+
+function stopTimer() {
+
+    clearInterval(
+        tick
+    );
+
+
+    tick =
+        null;
+
+
+    timer.classList.remove(
+        "on"
+    );
+
+
+    deadline =
+        0;
+
+}
+
+
+function startTimer() {
+
+    if (
+        !timerOn ||
+        show.value !== "none" ||
+        !playing ||
+        locked
     ) {
-        clearCountdownInterval();
-        timerDeadline = null;
 
-        if (clearRemaining) {
-            remainingTimeMs = null;
-        }
+        return;
 
-        if (!timerEnabled) {
-            updateCountdownDisplay(0);
-        }
     }
 
-    function pauseCountdown() {
-        if (
-            !timerEnabled ||
-            timerDeadline === null
-        ) {
-            return;
-        }
 
-        remainingTimeMs =
-            Math.max(
-                0,
-                timerDeadline -
-                performance.now()
-            );
+    stopTimer();
 
-        clearCountdownInterval();
-        timerDeadline = null;
 
-        updateCountdownDisplay(
-            remainingTimeMs,
-            true
-        );
-    }
+    const duration =
 
-    function startCountdown(
-        useRemaining = false
-    ) {
-        clearCountdownInterval();
+        Number(
+            seconds.value
+        )
+        *
+        1000;
 
-        if (
-            !timerEnabled ||
-            !started ||
-            !playing ||
-            roundFinished ||
-            !activePosition ||
-            answerLocked ||
-            isPracticeCardVisible()
-        ) {
-            return;
-        }
 
-        remainingTimeMs =
-            useRemaining &&
-            remainingTimeMs !== null
-                ? remainingTimeMs
-                : getSelectedTimerMs();
+    deadline =
 
-        timerDeadline =
-            performance.now() +
-            remainingTimeMs;
+        performance.now() +
 
-        const update = () => {
-            if (
-                timerDeadline === null ||
-                answerLocked ||
-                !playing
-            ) {
-                return;
-            }
+        duration;
 
-            remainingTimeMs =
-                Math.max(
-                    0,
-                    timerDeadline -
-                    performance.now()
-                );
 
-            updateCountdownDisplay(
-                remainingTimeMs
-            );
+    timer.classList.add(
+        "on"
+    );
 
-            if (remainingTimeMs <= 0) {
-                handleTimeout();
-            }
-        };
 
-        update();
+    tick =
+        setInterval(
+            () => {
 
-        countdownInterval =
-            window.setInterval(
-                update,
-                50
-            );
-    }
+                const left =
 
-    function handleTimeout() {
-        if (
-            answerLocked ||
-            !activePosition ||
-            roundFinished ||
-            isPracticeCardVisible()
-        ) {
-            return;
-        }
+                    Math.max(
 
-        answerLocked = true;
+                        0,
 
-        stopCountdown(true);
+                        deadline -
+                        performance.now()
 
-        timerBar.style.width = "0%";
-        timerTime.textContent = "Tijd om!";
-
-        countdown.classList.add(
-            "visible",
-            "running-low"
-        );
-
-        tries += 1;
-
-        triesDisplay.textContent =
-            String(tries);
-
-        const dot =
-            activePosition
-                .element
-                .querySelector(".dot");
-
-        if (dot) {
-            dot.classList.add("bad");
-        }
-
-        recordMistake(null, true);
-        playWrongSound();
-
-        setMessage(
-            `Tijd om · juiste noot: ${activePosition.note}`,
-            "wrong"
-        );
-
-        continueOrFinish(1250);
-    }
-
-    function updateTimerInterface() {
-        timerToggle.classList.toggle(
-            "active",
-            timerEnabled
-        );
-
-        timerToggle.setAttribute(
-            "aria-pressed",
-            String(timerEnabled)
-        );
-
-        timerToggle.textContent =
-            timerEnabled
-                ? "⏱ Timer: AAN"
-                : "⏱ Timer: UIT";
-
-        timerSeconds.disabled =
-            !timerEnabled;
-
-        if (!timerEnabled) {
-            stopCountdown(true);
-            updateCountdownDisplay(0);
-        } else if (
-            started &&
-            playing &&
-            activePosition &&
-            !answerLocked &&
-            !roundFinished &&
-            !isPracticeCardVisible()
-        ) {
-            startCountdown(false);
-        } else {
-            updateCountdownDisplay(
-                getSelectedTimerMs(),
-                started &&
-                !playing &&
-                !roundFinished
-            );
-        }
-    }
-
-    /* =====================================================
-       BUILD FRETBOARD
-       ===================================================== */
-
-    function buildFretboard() {
-        const numbers =
-            document.createElement("div");
-
-        numbers.className = "nums";
-
-        numbers.appendChild(
-            document.createElement("div")
-        );
-
-        for (
-            let fret = 1;
-            fret <= fretCount;
-            fret++
-        ) {
-            const number =
-                document.createElement("div");
-
-            number.className =
-                "fret-number";
-
-            number.textContent =
-                String(fret);
-
-            numbers.appendChild(number);
-        }
-
-        neck.appendChild(numbers);
-
-        strings.forEach(string => {
-            const row =
-                document.createElement("div");
-
-            row.className = "string";
-
-            if (string.wound) {
-                row.classList.add("wound");
-            }
-
-            row.style.setProperty(
-                "--string-width",
-                `${string.width}px`
-            );
-
-            row.style.setProperty(
-                "--string-color",
-                string.color
-            );
-
-            row.style.setProperty(
-                "--string-highlight",
-                string.highlight
-            );
-
-            const label =
-                document.createElement("div");
-
-            label.className = "label";
-            label.textContent = string.name;
-
-            row.appendChild(label);
-
-            const line =
-                document.createElement("div");
-
-            line.className = "string-line";
-            row.appendChild(line);
-
-            const cells = [];
-
-            for (
-                let fret = 1;
-                fret <= fretCount;
-                fret++
-            ) {
-                const cell =
-                    document.createElement("div");
-
-                cell.className = "cell";
-
-                if (fret === 1) {
-                    cell.classList.add("first");
-                }
-
-                if (fret === 12) {
-                    cell.style.setProperty(
-                        "--fret-width",
-                        "3px"
                     );
-                }
+
+
+                timerBar.style.width =
+
+                    (
+                        left /
+                        duration *
+                        100
+                    )
+                    +
+                    "%";
+
+
+                timerText.textContent =
+
+                    (
+                        left /
+                        1000
+                    )
+                    .toFixed(1)
+                    +
+                    " s";
+
 
                 if (
-                    string.number === 3 &&
-                    (
-                        fret === 5 ||
-                        fret === 7
-                    )
+                    left <= 0
                 ) {
-                    const marker =
-                        document.createElement("span");
 
-                    marker.className =
-                        "fret-position-marker";
+                    stopTimer();
 
-                    cell.appendChild(marker);
+                    timeout();
+
                 }
 
-                row.appendChild(cell);
-                cells.push(cell);
+            },
 
-                const midi =
-                    string.midi + fret;
+            50
 
-                positions.push({
-                    element: cell,
-                    note:
-                        noteNameFromMidi(midi),
-                    midi,
-                    fret,
-                    open: false,
-                    stringNumber:
-                        string.number
-                });
-            }
+        );
 
-            positions.push({
-                element: cells[0],
-                note:
-                    noteNameFromMidi(
-                        string.midi
-                    ),
-                midi: string.midi,
-                fret: 0,
-                open: true,
-                stringNumber:
-                    string.number
-            });
+}
 
-            neck.appendChild(row);
-        });
+
+/* =========================================================
+   QUESTION
+   ========================================================= */
+
+function showQuestion() {
+
+    if (
+        !playing ||
+        tries >= total
+    ) {
+
+        finish();
+
+        return;
+
     }
 
-    /* =====================================================
-       PRACTICE CARD
-       ===================================================== */
 
-    function shouldShowFretNote(note) {
-        const sharp =
-            note.includes("#");
+    clearTimeout(
+        nextTimer
+    );
 
-        return (
-            notesDisplayMode === "all" ||
-            (
-                notesDisplayMode === "natural" &&
-                !sharp
-            ) ||
-            (
-                notesDisplayMode === "sharp" &&
-                sharp
-            )
-        );
+
+    stopTimer();
+
+    clearDot();
+
+
+    locked =
+        false;
+
+
+    const available =
+        pool();
+
+
+    if (!available.length) {
+
+        return;
+
     }
 
-    function updatePracticeCardMode() {
-        const practiceVisible =
-            isPracticeCardVisible();
 
-        neck.classList.toggle(
-            "practice-mode",
-            practiceVisible
+    let next;
+
+
+    do {
+
+        next =
+            available[
+                Math.floor(
+                    Math.random() *
+                    available.length
+                )
+            ];
+
+    }
+
+    while (
+        available.length > 1 &&
+        active === next
+    );
+
+
+    active =
+        next;
+
+
+    const dot =
+        document.createElement(
+            "button"
         );
 
-        practiceBadge.classList.toggle(
-            "visible",
-            practiceVisible
+
+    dot.className =
+
+        "dot" +
+
+        (
+            active.open
+
+                ?
+
+                " open"
+
+                :
+
+                ""
         );
 
-        game
-            .querySelectorAll(".dot")
-            .forEach(dot => {
-                dot.classList.toggle(
-                    "practice-hidden",
-                    practiceVisible
-                );
-            });
 
-        if (practiceVisible) {
-            if (
-                timerEnabled &&
-                timerDeadline !== null
-            ) {
-                pauseCountdown();
-            }
+    dot.onclick =
+        () =>
+            tone(
 
-            setMessage(
-                "Bekijk de noten op de hals",
+                active.midi,
+
+                active.stringNumber
+
+            );
+
+
+    active.element.append(
+        dot
+    );
+
+
+    /*
+     * Hide black dot while using the neck as practice map.
+     */
+
+    if (
+        show.value !==
+        "none"
+    ) {
+
+        dot.style.display =
+            "none";
+
+    }
+
+    else {
+
+        tone(
+
+            active.midi,
+
+            active.stringNumber
+
+        );
+
+    }
+
+
+    msg.textContent =
+
+        show.value ===
+        "none"
+
+            ?
+
+            ""
+
+            :
+
+            T(
                 "practice"
             );
-        } else if (
-            started &&
-            playing &&
-            !roundFinished &&
-            activePosition &&
-            !answerLocked
-        ) {
-            setMessage("");
 
-            if (timerEnabled) {
-                startCountdown(true);
-            }
-        } else if (!started) {
-            setMessage(
-                "Druk op Start om te beginnen."
-            );
+
+    startTimer();
+
+}
+
+
+/* =========================================================
+   ERRORS
+   ========================================================= */
+
+function record() {
+
+    mistakes.push(
+        {
+            ...active
         }
-    }
+    );
 
-    function updateFretboardNoteLabels() {
-        game
-            .querySelectorAll(
-                ".fret-note-label"
-            )
-            .forEach(label => {
-                label.remove();
-            });
 
-        if (
-            notesDisplayMode !== "hidden"
-        ) {
-            positions.forEach(position => {
-                if (
-                    position.open ||
-                    !shouldShowFretNote(
-                        position.note
-                    )
-                ) {
-                    return;
-                }
+    updateErrors();
 
-                const label =
-                    document.createElement("span");
+}
 
-                label.className =
-                    "fret-note-label";
 
-                if (
-                    position.note.includes("#")
-                ) {
-                    label.classList.add("sharp");
-                }
+function uniqueErrors() {
 
-                label.textContent =
-                    position.note;
+    const map =
+        new Map();
 
-                position.element.appendChild(
-                    label
-                );
-            });
-        }
 
-        updatePracticeCardMode();
-        updateMistakes();
-    }
+    mistakes.forEach(
+        mistake => {
 
-    /* =====================================================
-       ANSWER KEYS AND MODES
-       ===================================================== */
+            map.set(
 
-    function buildAnswerKeys() {
-        answerNotes.forEach(item => {
-            const button =
-                document.createElement("button");
+                mistake.stringNumber +
+                "-" +
+                mistake.fret,
 
-            button.type = "button";
-            button.className = "key";
-            button.dataset.note = item.note;
+                mistake
 
-            if (
-                item.note.includes("#")
-            ) {
-                button.classList.add("sharp");
-            }
-
-            const main =
-                document.createElement("span");
-
-            main.className = "note-main";
-            main.textContent = item.note;
-
-            const solfege =
-                document.createElement("span");
-
-            solfege.className =
-                "note-solfege";
-
-            solfege.textContent =
-                item.solfege;
-
-            button.append(main, solfege);
-
-            button.addEventListener(
-                "click",
-                () => {
-                    submitAnswer(item.note);
-                }
             );
 
-            answerKeys.appendChild(button);
-        });
-    }
+        }
 
-    function updateModeInterface() {
-        const natural =
-            mode === "natural";
+    );
 
-        naturalModeButton.classList.toggle(
-            "active",
-            natural
+
+    return [
+        ...map.values()
+    ];
+
+}
+
+
+function updateErrors() {
+
+    document
+        .querySelectorAll(
+            ".mistake"
+        )
+        .forEach(
+            element =>
+                element.remove()
         );
 
-        allModeButton.classList.toggle(
-            "active",
-            !natural
-        );
 
-        naturalModeButton.setAttribute(
-            "aria-pressed",
-            String(natural)
-        );
+    const unique =
+        uniqueErrors();
 
-        allModeButton.setAttribute(
-            "aria-pressed",
-            String(!natural)
-        );
 
-        answerKeys
-            .querySelectorAll(".key")
-            .forEach(button => {
-                const sharp =
-                    button.dataset.note.includes("#");
+    errorsBtn.textContent =
 
-                button.disabled =
-                    roundFinished ||
-                    (
-                        !mistakesPracticeMode &&
-                        natural &&
-                        sharp
+        (
+            errorsVisible
+
+                ?
+
+                T(
+                    "hideErrors"
+                )
+
+                :
+
+                T(
+                    "errors"
+                )
+        )
+        +
+        ` (${unique.length})`;
+
+
+    retry.disabled =
+        !unique.length;
+
+
+    retry.textContent =
+
+        `↻ ${T(
+            "retry"
+        )} (${unique.length})`;
+
+
+    if (
+        errorsVisible
+    ) {
+
+        unique.forEach(
+            error => {
+
+                const marker =
+                    document.createElement(
+                        "span"
                     );
-            });
 
-        if (mistakesPracticeMode) {
-            hint.textContent =
-                `Fouten oefenen · ${activeRoundTotal} probleempositie${activeRoundTotal === 1 ? "" : "s"}`;
-        } else {
-            hint.textContent =
-                natural
-                    ? `Ronde van ${totalQuestions} hele noten · open snaar = dubbele rand`
-                    : `Ronde van ${totalQuestions} hele en halve noten · open snaar = dubbele rand`;
-        }
-    }
 
-    function getPositionPool() {
-        if (mistakesPracticeMode) {
-            return mistakesPracticePool;
-        }
+                marker.className =
 
-        return mode === "natural"
-            ? positions.filter(
-                position =>
-                    naturalNotes.has(
-                        position.note
-                    )
-            )
-            : positions;
-    }
+                    "mistake" +
 
-    /* =====================================================
-       QUESTIONS AND ANSWERS
-       ===================================================== */
+                    (
+                        error.open
 
-    function clearDot() {
-        game
-            .querySelectorAll(".dot")
-            .forEach(dot => {
-                dot.remove();
-            });
-    }
+                            ?
 
-    function choosePosition(pool) {
-        if (!pool.length) {
-            return null;
-        }
+                            " open"
 
-        let candidate;
+                            :
 
-        do {
-            candidate =
-                pool[
-                    Math.floor(
-                        Math.random() *
-                        pool.length
-                    )
-                ];
-        } while (
-            pool.length > 1 &&
-            activePosition &&
-            candidate.element ===
-                activePosition.element &&
-            candidate.midi ===
-                activePosition.midi
-        );
+                            ""
+                    );
 
-        return candidate;
-    }
 
-    async function showNextQuestion() {
-        if (
-            !playing ||
-            roundFinished ||
-            tries >= activeRoundTotal
-        ) {
-            return;
-        }
-
-        clearQuestionTimer();
-        stopCountdown(true);
-        clearDot();
-
-        answerLocked = false;
-
-        activePosition =
-            choosePosition(
-                getPositionPool()
-            );
-
-        if (!activePosition) {
-            return;
-        }
-
-        const dot =
-            document.createElement("button");
-
-        dot.type = "button";
-        dot.className = "dot";
-
-        if (activePosition.open) {
-            dot.classList.add("open");
-        }
-
-        if (isPracticeCardVisible()) {
-            dot.classList.add(
-                "practice-hidden"
-            );
-        }
-
-        dot.addEventListener(
-            "click",
-            async event => {
-                event.stopPropagation();
-
-                await playKarplusStrong(
-                    activePosition.midi,
-                    activePosition.stringNumber
+                error.element.append(
+                    marker
                 );
+
             }
+
         );
 
-        activePosition
-            .element
-            .appendChild(dot);
-
-        setMessage(
-            isPracticeCardVisible()
-                ? "Bekijk de noten op de hals"
-                : "",
-            isPracticeCardVisible()
-                ? "practice"
-                : ""
-        );
-
-        await playKarplusStrong(
-            activePosition.midi,
-            activePosition.stringNumber
-        );
-
-        if (
-            timerEnabled &&
-            !isPracticeCardVisible()
-        ) {
-            startCountdown(false);
-        }
     }
 
-    function submitAnswer(note) {
-        if (
-            !started ||
-            !playing ||
-            roundFinished ||
-            !activePosition ||
-            answerLocked ||
-            isPracticeCardVisible()
-        ) {
-            return;
-        }
+}
 
-        if (
-            !mistakesPracticeMode &&
-            mode === "natural" &&
-            note.includes("#")
-        ) {
-            return;
-        }
 
-        answerLocked = true;
+/* =========================================================
+   ANSWER
+   ========================================================= */
 
-        stopCountdown(true);
+function answer(note) {
 
-        tries += 1;
+    if (
+        !playing ||
+        locked ||
+        show.value !== "none" ||
+        !active
+    ) {
 
-        triesDisplay.textContent =
-            String(tries);
+        return;
 
-        const dot =
-            activePosition
-                .element
-                .querySelector(".dot");
+    }
 
-        const correct =
-            note === activePosition.note;
 
-        if (correct) {
-            score += 1;
+    if (
+        mode === "natural" &&
+        !retryMode &&
+        note.includes("#")
+    ) {
 
-            scoreDisplay.textContent =
-                String(score);
+        return;
 
-            if (dot) {
-                dot.classList.add("good");
-            }
+    }
 
-            playCorrectSound();
 
-            setMessage(
-                `✓ Juist · ${note}`,
+    locked =
+        true;
+
+
+    stopTimer();
+
+
+    tries++;
+
+
+    triesEl.textContent =
+        tries;
+
+
+    const dot =
+
+        active.element
+            .querySelector(
+                ".dot"
+            );
+
+
+    const correct =
+
+        note ===
+        active.note;
+
+
+    if (correct) {
+
+        score++;
+
+
+        scoreEl.textContent =
+            score;
+
+
+        dot.classList.add(
+            "good"
+        );
+
+
+        good();
+
+
+        msg.textContent =
+
+            `✓ ${T(
                 "correct"
-            );
-        } else {
-            if (dot) {
-                dot.classList.add("bad");
-            }
+            )} · ${note}`;
 
-            recordMistake(note);
-            playWrongSound();
-
-            setMessage(
-                `✗ Juiste noot: ${activePosition.note}`,
-                "wrong"
-            );
-        }
-
-        continueOrFinish(
-            correct
-                ? 700
-                : 1050
-        );
     }
 
-    /* =====================================================
-       START NORMAL ROUND
-       ===================================================== */
+    else {
 
-    async function startNormalRound() {
-        await unlockAudio();
-
-        updateRoundSize();
-
-        clearQuestionTimer();
-        stopCountdown(true);
-        clearDot();
-
-        score = 0;
-        tries = 0;
-
-        scoreDisplay.textContent = "0";
-        triesDisplay.textContent = "0";
-
-        /*
-         * Nieuw spel of Reset wist alle fouten.
-         */
-        resetMistakes();
-
-        activeRoundTotal =
-            totalQuestions;
-
-        started = true;
-        playing = true;
-        roundFinished = false;
-        answerLocked = false;
-        activePosition = null;
-
-        roundSize.disabled = true;
-
-        playPauseButton.disabled = false;
-        playPauseButton.textContent =
-            "⏸ Pause";
-
-        progressBar.classList.remove(
-            "complete"
+        dot.classList.add(
+            "bad"
         );
 
-        updateProgress();
-        updateStartButton();
-        updateModeInterface();
 
-        await showNextQuestion();
+        record();
+
+        bad();
+
+
+        msg.textContent =
+
+            `✗ ${T(
+                "correctNote"
+            )}: ${active.note}`;
+
     }
 
-    async function startMistakesPractice() {
-        mistakesPracticePool =
-            buildMistakesPracticePool();
 
-        if (!mistakesPracticePool.length) {
-            return;
-        }
-
-        await unlockAudio();
-
-        mistakesPracticeMode = true;
-
-        mistakesVisible = false;
-        updateMistakes();
-
-        notesDisplayMode = "hidden";
-        notesDisplay.value = "hidden";
-
-        updateFretboardNoteLabels();
-
-        clearQuestionTimer();
-        stopCountdown(true);
-        clearDot();
-
-        score = 0;
-        tries = 0;
-
-        scoreDisplay.textContent = "0";
-        triesDisplay.textContent = "0";
-
-        activeRoundTotal =
-            mistakesPracticePool.length;
-
-        started = true;
-        playing = true;
-        roundFinished = false;
-        answerLocked = false;
-        activePosition = null;
-
-        roundSize.disabled = true;
-
-        playPauseButton.disabled = false;
-        playPauseButton.textContent =
-            "⏸ Pause";
-
-        progressBar.classList.remove(
-            "complete"
-        );
-
-        updateProgress();
-        updateStartButton();
-        updateModeInterface();
-        updateMistakePracticeButton();
-
-        setMessage(
-            `Fouten oefenen · ${activeRoundTotal} probleempositie${activeRoundTotal === 1 ? "" : "s"}`
-        );
-
-        await showNextQuestion();
-    }
-
-    function stopMistakesPractice() {
-        clearQuestionTimer();
-        stopCountdown(true);
-        clearDot();
-
-        mistakesPracticeMode = false;
-        mistakesPracticePool = [];
-
-        playing = false;
-        started = false;
-        roundFinished = false;
-        answerLocked = false;
-        activePosition = null;
-
-        score = 0;
-        tries = 0;
-
-        scoreDisplay.textContent = "0";
-        triesDisplay.textContent = "0";
-
-        activeRoundTotal =
-            totalQuestions;
-
-        roundSize.disabled = false;
-
-        playPauseButton.textContent =
-            "▶ PLAY";
-
-        progressBar.classList.remove(
-            "complete"
-        );
-
-        updateProgress();
-        updateStartButton();
-        updateModeInterface();
-        updateMistakePracticeButton();
-
-        setMessage(
-            "Fouten oefenen gestopt."
-        );
-    }
-
-    /* =====================================================
-       EVENTS
-       ===================================================== */
-
-    roundSize.addEventListener(
-        "change",
-        updateRoundSize
-    );
-
-    roundSize.addEventListener(
-        "blur",
-        updateRoundSize
-    );
-
-    mistakesButton.addEventListener(
-        "click",
-        () => {
-            mistakesVisible =
-                !mistakesVisible;
-
-            updateMistakes();
-        }
-    );
-
-    practiceMistakesButton.addEventListener(
-        "click",
-        async () => {
-            if (mistakesPracticeMode) {
-                stopMistakesPractice();
-            } else {
-                await startMistakesPractice();
-            }
-        }
-    );
-
-    naturalModeButton.addEventListener(
-        "click",
-        async () => {
-            mode = "natural";
-
-            updateModeInterface();
-
-            if (
-                started &&
-                playing &&
-                !roundFinished &&
-                !mistakesPracticeMode
-            ) {
-                await showNextQuestion();
-            }
-        }
-    );
-
-    allModeButton.addEventListener(
-        "click",
-        async () => {
-            mode = "all";
-
-            updateModeInterface();
-
-            if (
-                started &&
-                playing &&
-                !roundFinished &&
-                !mistakesPracticeMode
-            ) {
-                await showNextQuestion();
-            }
-        }
-    );
-
-    notesDisplay.addEventListener(
-        "change",
-        () => {
-            notesDisplayMode =
-                notesDisplay.value;
-
-            updateFretboardNoteLabels();
-        }
-    );
-
-    timerToggle.addEventListener(
-        "click",
-        () => {
-            timerEnabled =
-                !timerEnabled;
-
-            remainingTimeMs = null;
-
-            updateTimerInterface();
-        }
-    );
-
-    timerSeconds.addEventListener(
-        "change",
-        () => {
-            remainingTimeMs = null;
-
-            if (
-                timerEnabled &&
-                started &&
-                playing &&
-                !answerLocked &&
-                !isPracticeCardVisible()
-            ) {
-                startCountdown(false);
-            }
-        }
-    );
-
-    playPauseButton.addEventListener(
-        "click",
-        async () => {
-            if (!started) {
-                setMessage(
-                    "Druk eerst op Start."
-                );
-
-                return;
-            }
-
-            if (roundFinished) {
-                setMessage(
-                    mistakesPracticeMode
-                        ? "De foutenoefening is voltooid."
-                        : "Druk op Start voor een nieuwe ronde."
-                );
-
-                return;
-            }
-
-            await unlockAudio();
-
-            if (playing) {
-                playing = false;
-
-                playPauseButton.textContent =
-                    "▶ PLAY";
-
-                if (timerEnabled) {
-                    pauseCountdown();
-                }
-
-                setMessage("Gepauzeerd");
-                return;
-            }
-
-            playing = true;
-
-            playPauseButton.textContent =
-                "⏸ Pause";
-
-            updatePracticeCardMode();
-
-            if (activePosition) {
-                await playKarplusStrong(
-                    activePosition.midi,
-                    activePosition.stringNumber
-                );
-
-                if (
-                    timerEnabled &&
-                    !answerLocked &&
-                    !isPracticeCardVisible()
-                ) {
-                    startCountdown(true);
-                }
-            } else {
-                await showNextQuestion();
-            }
-        }
-    );
-
-    startButton.addEventListener(
-        "click",
-        startNormalRound
-    );
-
-    window.addEventListener(
-        "keydown",
-        event => {
-            if (event.repeat) {
-                return;
-            }
-
-            if (event.code === "Space") {
-                event.preventDefault();
-                playPauseButton.click();
-                return;
-            }
-
-            if (
-                !started ||
-                !playing ||
-                roundFinished ||
-                isPracticeCardVisible()
-            ) {
-                return;
-            }
-
-            const key =
-                event.key.toUpperCase();
-
-            if (
-                "ABCDEFG".includes(key)
-            ) {
-                submitAnswer(key);
-            }
-        }
-    );
-
-    /* =====================================================
-       INITIALIZE
-       ===================================================== */
-
-    buildFretboard();
-    buildAnswerKeys();
-
-    updateRoundSize();
-    updateModeInterface();
-    updateTimerInterface();
-    updateFretboardNoteLabels();
-    updateMistakes();
     updateProgress();
-    updateStartButton();
 
-    setMessage(
-        "Druk op Start om te beginnen."
+
+    nextTimer =
+        setTimeout(
+
+            () =>
+
+                tries >= total
+
+                    ?
+
+                    finish()
+
+                    :
+
+                    showQuestion(),
+
+            correct
+
+                ?
+
+                650
+
+                :
+
+                950
+
+        );
+
+}
+
+
+/* =========================================================
+   TIMEOUT
+   ========================================================= */
+
+function timeout() {
+
+    if (locked) {
+
+        return;
+
+    }
+
+
+    locked =
+        true;
+
+
+    tries++;
+
+
+    triesEl.textContent =
+        tries;
+
+
+    const dot =
+
+        active.element
+            .querySelector(
+                ".dot"
+            );
+
+
+    if (dot) {
+
+        dot.classList.add(
+            "bad"
+        );
+
+    }
+
+
+    record();
+
+    bad();
+
+
+    msg.textContent =
+
+        `${T(
+            "time"
+        )} · ${T(
+            "correctNote"
+        )}: ${active.note}`;
+
+
+    updateProgress();
+
+
+    nextTimer =
+        setTimeout(
+
+            () =>
+
+                tries >= total
+
+                    ?
+
+                    finish()
+
+                    :
+
+                    showQuestion(),
+
+            1100
+
+        );
+
+}
+
+
+/* =========================================================
+   FINISH
+   ========================================================= */
+
+function finish() {
+
+    playing =
+        false;
+
+
+    stopTimer();
+
+
+    progress.style.width =
+        "100%";
+
+
+    start.textContent =
+
+        `▶ ${T(
+            "start"
+        )}`;
+
+
+    round.disabled =
+        false;
+
+
+    msg.textContent =
+
+        `${T(
+            "complete"
+        )}: ${score} / ${total}`;
+
+}
+
+
+/* =========================================================
+   PRACTICE MAP LABELS
+   ========================================================= */
+
+function labels() {
+
+    document
+        .querySelectorAll(
+            ".note"
+        )
+        .forEach(
+            element =>
+                element.remove()
+        );
+
+
+    const selected =
+        show.value;
+
+
+    if (
+        selected !==
+        "none"
+    ) {
+
+        positions
+            .filter(
+                position =>
+                    !position.open
+            )
+            .forEach(
+                position => {
+
+                    const sharp =
+
+                        position.note
+                            .includes("#");
+
+
+                    const display =
+
+                        selected ===
+                        "all"
+
+                        ||
+
+                        (
+                            selected ===
+                            "natural"
+
+                            &&
+
+                            !sharp
+                        )
+
+                        ||
+
+                        (
+                            selected ===
+                            "sharp"
+
+                            &&
+
+                            sharp
+                        );
+
+
+                    if (!display) {
+
+                        return;
+
+                    }
+
+
+                    const element =
+
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    element.className =
+
+                        "note" +
+
+                        (
+                            sharp
+
+                                ?
+
+                                " sharp"
+
+                                :
+
+                                ""
+                        );
+
+
+                    element.textContent =
+                        position.note;
+
+
+                    position.element.append(
+                        element
+                    );
+
+                }
+
+            );
+
+    }
+
+
+    const dot =
+        document.querySelector(
+            ".dot"
+        );
+
+
+    if (dot) {
+
+        dot.style.display =
+
+            selected ===
+            "none"
+
+                ?
+
+                ""
+
+                :
+
+                "none";
+
+    }
+
+
+    if (
+        selected !==
+        "none"
+    ) {
+
+        stopTimer();
+
+    }
+
+    else {
+
+        startTimer();
+
+    }
+
+
+    updateErrors();
+
+}
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+settingsToggle.onclick =
+    () => {
+
+        const open =
+
+            settingsPanel
+                .classList
+                .toggle(
+                    "landscape-open"
+                );
+
+
+        settingsToggle
+            .setAttribute(
+
+                "aria-expanded",
+
+                String(open)
+
+            );
+
+    };
+
+
+function closeSettings() {
+
+    settingsPanel
+        .classList
+        .remove(
+            "landscape-open"
+        );
+
+
+    settingsToggle
+        .setAttribute(
+
+            "aria-expanded",
+
+            "false"
+
+        );
+
+}
+
+
+/* =========================================================
+   RESET / START
+   ========================================================= */
+
+function resetGame() {
+
+    closeSettings();
+
+
+    clearTimeout(
+        nextTimer
     );
 
-    soundStatus.textContent =
-        "Geluid start zodra je op Start drukt.";
-})();
+
+    stopTimer();
+
+    clearDot();
+
+
+    score =
+        0;
+
+
+    tries =
+        0;
+
+
+    scoreEl.textContent =
+        "0";
+
+
+    triesEl.textContent =
+        "0";
+
+
+    /*
+     * New round clears errors.
+     */
+
+    mistakes =
+        [];
+
+
+    errorsVisible =
+        false;
+
+
+    retryMode =
+        false;
+
+
+    retryPool =
+        [];
+
+
+    updateErrors();
+
+
+    total =
+        normRound();
+
+
+    round.value =
+        total;
+
+
+    round.disabled =
+        true;
+
+
+    playing =
+        true;
+
+
+    locked =
+        false;
+
+
+    active =
+        null;
+
+
+    progress.style.width =
+        "0%";
+
+
+    start.textContent =
+
+        `↻ ${T(
+            "reset"
+        )}`;
+
+
+    showQuestion();
+
+}
+
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+
+start.onclick =
+    resetGame;
+
+
+natural.onclick =
+    () => {
+
+        mode =
+            "natural";
+
+
+        natural
+            .classList
+            .add(
+                "active"
+            );
+
+
+        all
+            .classList
+            .remove(
+                "active"
+            );
+
+
+        document
+            .querySelectorAll(
+                ".answers .sharp"
+            )
+            .forEach(
+                button =>
+                    button.disabled =
+                        true
+            );
+
+
+        if (playing) {
+
+            showQuestion();
+
+        }
+
+    };
+
+
+all.onclick =
+    () => {
+
+        mode =
+            "all";
+
+
+        all
+            .classList
+            .add(
+                "active"
+            );
+
+
+        natural
+            .classList
+            .remove(
+                "active"
+            );
+
+
+        document
+            .querySelectorAll(
+                ".answers .sharp"
+            )
+            .forEach(
+                button =>
+                    button.disabled =
+                        false
+            );
+
+
+        if (playing) {
+
+            showQuestion();
+
+        }
+
+    };
+
+
+show.onchange =
+    labels;
+
+
+round.onchange =
+    () => {
+
+        round.value =
+            normRound();
+
+
+        total =
+            Number(
+                round.value
+            );
+
+
+        updateProgress();
+
+    };
+
+
+timerBtn.onclick =
+    () => {
+
+        timerOn =
+            !timerOn;
+
+
+        timerBtn
+            .classList
+            .toggle(
+                "active",
+                timerOn
+            );
+
+
+        timerBtn.textContent =
+
+            "⏱ " +
+
+            (
+                timerOn
+
+                    ?
+
+                    T(
+                        "timerOn"
+                    )
+
+                    :
+
+                    T(
+                        "timerOff"
+                    )
+            );
+
+
+        seconds.disabled =
+            !timerOn;
+
+
+        if (timerOn) {
+
+            startTimer();
+
+        }
+
+        else {
+
+            stopTimer();
+
+        }
+
+    };
+
+
+seconds.onchange =
+    startTimer;
+
+
+errorsBtn.onclick =
+    () => {
+
+        errorsVisible =
+            !errorsVisible;
+
+
+        updateErrors();
+
+    };
+
+
+retry.onclick =
+    () => {
+
+        closeSettings();
+
+
+        const unique =
+            uniqueErrors();
+
+
+        if (!unique.length) {
+
+            return;
+
+        }
+
+
+        retryMode =
+            true;
+
+
+        retryPool =
+            unique;
+
+
+        show.value =
+            "none";
+
+
+        labels();
+
+
+        clearDot();
+
+
+        score =
+            0;
+
+
+        tries =
+            0;
+
+
+        scoreEl.textContent =
+            "0";
+
+
+        triesEl.textContent =
+            "0";
+
+
+        total =
+            unique.length;
+
+
+        playing =
+            true;
+
+
+        locked =
+            false;
+
+
+        active =
+            null;
+
+
+        progress.style.width =
+            "0%";
+
+
+        start.textContent =
+
+            `▶ ${T(
+                "start"
+            )}`;
+
+
+        msg.textContent =
+
+            T(
+                "retry"
+            );
+
+
+        showQuestion();
+
+    };
+
+
+/* =========================================================
+   LANGUAGE
+   ========================================================= */
+
+function applyLanguage() {
+
+    document.documentElement.lang =
+        language;
+
+
+    langNL
+        .classList
+        .toggle(
+            "active",
+            language === "nl"
+        );
+
+
+    langEN
+        .classList
+        .toggle(
+            "active",
+            language === "en"
+        );
+
+
+    appTitle.textContent =
+        T(
+            "title"
+        );
+
+
+    natural.textContent =
+        T(
+            "natural"
+        );
+
+
+    all.textContent =
+        T(
+            "all"
+        );
+
+
+    notesLabel.textContent =
+        T(
+            "notes"
+        );
+
+
+    roundLabel.textContent =
+        T(
+            "round"
+        );
+
+
+    show.options[0].text =
+        T(
+            "hide"
+        );
+
+
+    show.options[1].text =
+        T(
+            "allNotes"
+        );
+
+
+    show.options[2].text =
+        T(
+            "naturalNotes"
+        );
+
+
+    show.options[3].text =
+        T(
+            "sharps"
+        );
+
+
+    timerBtn.textContent =
+
+        "⏱ " +
+
+        (
+            timerOn
+
+                ?
+
+                T(
+                    "timerOn"
+                )
+
+                :
+
+                T(
+                    "timerOff"
+                )
+        );
+
+
+    start.textContent =
+
+        playing
+
+            ?
+
+            `↻ ${T(
+                "reset"
+            )}`
+
+            :
+
+            `▶ ${T(
+                "start"
+            )}`;
+
+
+    updateErrors();
+
+
+    if (!playing) {
+
+        msg.textContent =
+            T(
+                "press"
+            );
+
+    }
+
+}
+
+
+langNL.onclick =
+    () => {
+
+        language =
+            "nl";
+
+
+        applyLanguage();
+
+    };
+
+
+langEN.onclick =
+    () => {
+
+        language =
+            "en";
+
+
+        applyLanguage();
+
+    };
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+build();
+
+buildAnswers();
+
+/*
+ * Default:
+ * natural notes only.
+ */
+
+natural.click();
+
+updateErrors();
+
+updateProgress();
+
+applyLanguage();
 </script>
 
 </body>
