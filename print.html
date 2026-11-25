@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Gitaarhals Oefenkaart</title>
+
+<style>
+:root {
+    --wood-dark: #39231d;
+    --wood-middle: #513027;
+    --wood-light: #634036;
+
+    --spruce: #d1aa70;
+    --cream: #f7efdf;
+
+    --natural-fill: #e2bd7d;
+    --natural-border: #f8ddb0;
+
+    --sharp-fill: #754839;
+    --sharp-border: #a66d52;
+
+    --blank-natural-border: #c59045;
+    --blank-sharp-border: #854936;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #17120f;
+    color: var(--cream);
+}
+
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* ==================================================
+   TITEL
+================================================== */
+
+h1 {
+    margin: 0;
+
+    color: var(--spruce);
+
+    font-size: 25px;
+    font-weight: 600;
+
+    text-align: center;
+}
+
+.subtitle {
+    margin: 5px 0 20px;
+
+    color: #cabba5;
+
+    font-size: 13px;
+
+    text-align: center;
+}
+
+
+/* ==================================================
+   BEDIENING
+================================================== */
+
+.toolbar {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+}
+
+button {
+    min-height: 38px;
+
+    padding: 8px 14px;
+
+    border: 1px solid #aa7955;
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            #88583b,
+            #603a29
+        );
+
+    color: #fff4e5;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+button:hover {
+    filter: brightness(1.1);
+}
+
+button:focus-visible {
+    outline: 3px solid #e6bc78;
+    outline-offset: 2px;
+}
+
+button.active {
+    border-color: #e0b774;
+
+    background:
+        linear-gradient(
+            #ddb87b,
+            #b98048
+        );
+
+    color: #29170d;
+    font-weight: 700;
+}
+
+
+/* ==================================================
+   SCROLLCONTAINER
+================================================== */
+
+.fretboard-wrap {
+    width: 100%;
+
+    overflow-x: auto;
+
+    padding-bottom: 5px;
+}
+
+
+/* ==================================================
+   GITAARHALS EN SNAARNAMEN
+================================================== */
+
+.guitar {
+    display: flex;
+
+    width: 100%;
+    min-width: 940px;
+}
+
+
+/* Linkerkolom met snaarnamen */
+
+.string-names {
+    width: 52px;
+    flex: 0 0 52px;
+
+    display: grid;
+
+    grid-template-rows:
+        repeat(6, 50px);
+
+    color: #e5c796;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-align: center;
+}
+
+.string-name {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ==================================================
+   FRETBOARD
+================================================== */
+
+.fretboard {
+    position: relative;
+
+    flex: 1;
+
+    display: grid;
+
+    grid-template-rows:
+        repeat(6, 50px);
+
+    border: 3px solid #b88a5a;
+    border-radius: 6px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--wood-dark) 0%,
+            var(--wood-middle) 48%,
+            var(--wood-light) 68%,
+            var(--wood-dark) 100%
+        );
+
+    box-shadow:
+        inset 0 0 25px #0009,
+        0 5px 14px #0006;
+
+    overflow: hidden;
+}
+
+
+/* ==================================================
+   FRETCELLEN
+================================================== */
+
+.cell {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 0;
+
+    border-right:
+        2px solid #aaa090;
+}
+
+
+/* Open snaarvak */
+
+.cell.open {
+    border-right:
+        5px solid #ddd5c4;
+
+    background: #261713;
+}
+
+
+/* ==================================================
+   SNAREN
+================================================== */
+
+.cell::after {
+    content: "";
+
+    position: absolute;
+    z-index: 1;
+
+    left: 0;
+    right: 0;
+    top: 50%;
+
+    height: 1px;
+
+    transform: translateY(-50%);
+
+    background: #d7d1c4;
+
+    box-shadow:
+        0 1px 1px #000;
+}
+
+
+/* Hoge E */
+
+.cell.string-1::after {
+    height: 1px;
+}
+
+
+/* B */
+
+.cell.string-2::after {
+    height: 1.2px;
+}
+
+
+/* G */
+
+.cell.string-3::after {
+    height: 1.4px;
+}
+
+
+/* D */
+
+.cell.string-4::after {
+    height: 1.7px;
+}
+
+
+/* A */
+
+.cell.string-5::after {
+    height: 2px;
+}
+
+
+/* Lage E */
+
+.cell.string-6::after {
+    height: 2.3px;
+}
+
+
+/* ==================================================
+   NOTEN
+================================================== */
+
+.note {
+    position: relative;
+    z-index: 3;
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border:
+        2px solid
+        var(--natural-border);
+
+    border-radius: 50%;
+
+    background:
+        var(--natural-fill);
+
+    color: #25160e;
+
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+
+    box-shadow:
+        0 2px 4px #0007;
+}
+
+
+/* Halve tonen */
+
+.note.sharp {
+    border-color:
+        var(--sharp-border);
+
+    background:
+        var(--sharp-fill);
+
+    color:
+        #f8efe2;
+}
+
+
+/* ==================================================
+   BLANCO OEFENKAART
+================================================== */
+
+.note.blank {
+    width: 30px;
+    height: 30px;
+
+    background: #ffffff;
+
+    color: transparent;
+
+    box-shadow: none;
+}
+
+
+/* Blanco hele noot */
+
+.note.blank.natural {
+    border:
+        2.5px solid
+        var(--blank-natural-border);
+}
+
+
+/* Blanco halve noot */
+
+.note.blank.sharp {
+    border:
+        2.5px solid
+        var(--blank-sharp-border);
+
+    background: #ffffff;
+}
+
+
+/* ==================================================
+   TOETSINLEG
+================================================== */
+
+.fret-marker {
+    position: absolute;
+    z-index: 0;
+
+    left: 50%;
+    top: 100%;
+
+    width: 13px;
+    height: 13px;
+
+    transform:
+        translate(-50%, -50%);
+
+    border:
+        1px solid
+        #ead9b5;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #fff9df 0%,
+            #d7c59a 48%,
+            #9b8057 100%
+        );
+
+    box-shadow:
+        0 1px 3px #0008;
+
+    pointer-events: none;
+}
+
+
+/* ==================================================
+   FRETNUMMERS
+================================================== */
+
+.labels-row {
+    display: flex;
+
+    width: 100%;
+    min-width: 940px;
+
+    margin-top: 7px;
+}
+
+.labels-spacer {
+    width: 52px;
+    flex: 0 0 52px;
+}
+
+.fret-labels {
+    flex: 1;
+
+    display: grid;
+
+    color: #c9aa7e;
+
+    font-size: 10px;
+
+    text-align: center;
+}
+
+.fret-label {
+    display: flex;
+
+    justify-content: center;
+
+    min-width: 0;
+}
+
+
+/* ==================================================
+   LEGENDA
+================================================== */
+
+.legend {
+    margin-top: 17px;
+
+    color: #cdbb9f;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+.hint {
+    margin-top: 7px;
+
+    color: #8f806d;
+
+    font-size: 10px;
+
+    text-align: center;
+}
+
+
+/* ==================================================
+   PRINTERVRIENDELIJKE ZWART-WITWEERGAVE
+================================================== */
+
+body.bw-mode {
+    background: #ffffff;
+    color: #000000;
+}
+
+body.bw-mode h1 {
+    color: #000000;
+}
+
+body.bw-mode .subtitle,
+body.bw-mode .legend,
+body.bw-mode .hint,
+body.bw-mode .string-names,
+body.bw-mode .fret-labels {
+    color: #000000;
+}
+
+
+/* Witte hals zonder donkere vlakken */
+
+body.bw-mode .fretboard {
+    border:
+        1.5px solid
+        #000000;
+
+    background: #ffffff;
+
+    box-shadow: none;
+}
+
+
+/* Dunne fretdraden */
+
+body.bw-mode .cell {
+    border-right:
+        1.2px solid
+        #555555;
+}
+
+
+/* Topkam */
+
+body.bw-mode .cell.open {
+    border-right:
+        3px solid
+        #000000;
+
+    background: #ffffff;
+}
+
+
+/* Zwarte snaren zonder schaduw */
+
+body.bw-mode .cell::after {
+    background: #000000;
+
+    box-shadow: none;
+}
+
+
+/* Printervriendelijke snaardiktes */
+
+body.bw-mode .cell.string-1::after {
+    height: 0.7px;
+}
+
+body.bw-mode .cell.string-2::after {
+    height: 0.9px;
+}
+
+body.bw-mode .cell.string-3::after {
+    height: 1.1px;
+}
+
+body.bw-mode .cell.string-4::after {
+    height: 1.4px;
+}
+
+body.bw-mode .cell.string-5::after {
+    height: 1.7px;
+}
+
+body.bw-mode .cell.string-6::after {
+    height: 2px;
+}
+
+
+/* Hele noten: enkele rand */
+
+body.bw-mode .note {
+    border:
+        1.8px solid
+        #000000;
+
+    background: #ffffff;
+
+    color: #000000;
+
+    box-shadow: none;
+}
+
+
+/* Halve noten: dubbele rand */
+
+body.bw-mode .note.sharp {
+    border:
+        3px double
+        #000000;
+
+    background: #f1f1f1;
+
+    color: #000000;
+
+    box-shadow: none;
+}
+
+
+/* Blanco hele noot: enkele rand */
+
+body.bw-mode .note.blank.natural {
+    border:
+        1.8px solid
+        #000000;
+
+    background: #ffffff;
+}
+
+
+/* Blanco halve noot: dubbele rand */
+
+body.bw-mode .note.blank.sharp {
+    border:
+        3px double
+        #000000;
+
+    background: #ffffff;
+}
+
+
+/* Zwarte toetsinleg */
+
+body.bw-mode .fret-marker {
+    width: 10px;
+    height: 10px;
+
+    border: none;
+
+    background: #000000;
+
+    box-shadow: none;
+}
+
+
+/* ==================================================
+   ALLE BEDIENKNOPPEN IN ZWART-WITMODUS
+================================================== */
+
+body.bw-mode .toolbar button {
+    border:
+        1.5px solid
+        #000000;
+
+    background: #ffffff;
+
+    color: #000000;
+
+    box-shadow: none;
+
+    filter: none;
+}
+
+
+/* Geselecteerde kaartmodus */
+
+body.bw-mode .toolbar button.active {
+    border-color: #000000;
+
+    background: #000000;
+
+    color: #ffffff;
+
+    font-weight: 700;
+}
+
+
+/* Hover voor gewone knoppen */
+
+body.bw-mode .toolbar button:hover {
+    background: #e8e8e8;
+
+    color: #000000;
+
+    filter: none;
+}
+
+
+/* Actieve knop blijft zwart bij hover */
+
+body.bw-mode .toolbar button.active:hover {
+    background: #000000;
+
+    color: #ffffff;
+}
+
+
+/* Keyboardfocus */
+
+body.bw-mode .toolbar button:focus-visible {
+    outline:
+        2px solid
+        #000000;
+
+    outline-offset: 2px;
+}
+
+
+/* Zwart-wit/Kleur-knop */
+
+body.bw-mode #bwButton {
+    border:
+        2px solid
+        #000000;
+
+    background: #ffffff;
+
+    color: #000000;
+
+    font-weight: 600;
+
+    box-shadow: none;
+}
+
+
+/* Afdrukken en Terug */
+
+body.bw-mode #printButton,
+body.bw-mode #backButton {
+    border:
+        1.5px solid
+        #000000;
+
+    background: #ffffff;
+
+    color: #000000;
+
+    box-shadow: none;
+}
+
+
+/* Hover voor Kleur, Afdrukken en Terug */
+
+body.bw-mode #bwButton:hover,
+body.bw-mode #printButton:hover,
+body.bw-mode #backButton:hover {
+    background: #e8e8e8;
+
+    color: #000000;
+}
+
+
+/* ==================================================
+   MOBIELE WEERGAVE
+================================================== */
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 21px;
+    }
+
+    .subtitle {
+        font-size: 12px;
+    }
+
+    button {
+        min-height: 40px;
+    }
+}
+
+
+/* ==================================================
+   AFDRUKWEERGAVE
+================================================== */
+
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 9mm;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+
+        background: #ffffff;
+
+        color: #000000;
+    }
+
+    .page {
+        max-width: none;
+    }
+
+    .toolbar,
+    .hint {
+        display: none;
+    }
+
+    h1 {
+        color: #4c3023;
+    }
+
+    .subtitle {
+        color: #555555;
+    }
+
+    .legend {
+        color: #444444;
+    }
+
+    .fretboard-wrap {
+        overflow: visible;
+    }
+
+    .guitar,
+    .labels-row {
+        min-width: 0;
+    }
+
+    .string-names {
+        color: #4c3023;
+    }
+
+    .fretboard {
+        break-inside: avoid;
+
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .note,
+    .fret-marker {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+
+    /* ----------------------------------------------
+       ZWART-WITAFDRUK
+    ---------------------------------------------- */
+
+    body.bw-mode,
+    body.bw-mode .page {
+        background:
+            #ffffff !important;
+
+        color:
+            #000000 !important;
+    }
+
+    body.bw-mode h1,
+    body.bw-mode .subtitle,
+    body.bw-mode .legend,
+    body.bw-mode .string-names,
+    body.bw-mode .fret-labels {
+        color:
+            #000000 !important;
+    }
+
+    body.bw-mode .fretboard {
+        border:
+            1.5px solid
+            #000000 !important;
+
+        background:
+            #ffffff !important;
+
+        box-shadow:
+            none !important;
+    }
+
+    body.bw-mode .cell {
+        border-right:
+            1.2px solid
+            #555555 !important;
+    }
+
+    body.bw-mode .cell.open {
+        border-right:
+            3px solid
+            #000000 !important;
+
+        background:
+            #ffffff !important;
+    }
+
+    body.bw-mode .cell::after {
+        background:
+            #000000 !important;
+
+        box-shadow:
+            none !important;
+    }
+
+    body.bw-mode .note {
+        border:
+            1.8px solid
+            #000000 !important;
+
+        background:
+            #ffffff !important;
+
+        color:
+            #000000 !important;
+
+        box-shadow:
+            none !important;
+    }
+
+    body.bw-mode .note.sharp {
+        border:
+            3px double
+            #000000 !important;
+
+        background:
+            #f1f1f1 !important;
+
+        color:
+            #000000 !important;
+    }
+
+    body.bw-mode .note.blank.natural {
+        border:
+            1.8px solid
+            #000000 !important;
+
+        background:
+            #ffffff !important;
+    }
+
+    body.bw-mode .note.blank.sharp {
+        border:
+            3px double
+            #000000 !important;
+
+        background:
+            #ffffff !important;
+    }
+
+    body.bw-mode .fret-marker {
+        border:
+            none !important;
+
+        background:
+            #000000 !important;
+
+        box-shadow:
+            none !important;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<main class="page">
+
+    <h1>Gitaarhals Oefenkaart</h1>
+
+    <div class="subtitle">
+        Standaardstemming E – A – D – G – B – E · fret 0–12
+    </div>
+
+
+    <!-- ==========================================
+         BEDIENING
+    =========================================== -->
+
+    <div
+        class="toolbar"
+        aria-label="Oefenkaartinstellingen"
+    >
+
+        <button
+            type="button"
+            data-mode="all"
+            class="active"
+        >
+            Alle noten
+        </button>
+
+        <button
+            type="button"
+            data-mode="natural"
+        >
+            Hele noten
+        </button>
+
+        <button
+            type="button"
+            data-mode="blank"
+        >
+            Blanco
+        </button>
+
+        <button
+            type="button"
+            id="bwButton"
+            aria-pressed="false"
+        >
+            ◐ Zwart-wit
+        </button>
+
+        <button
+            type="button"
+            id="printButton"
+        >
+            🖨 Afdrukken
+        </button>
+
+        <button
+            type="button"
+            id="backButton"
+        >
+            ← Terug
+        </button>
+
+    </div>
+
+
+    <!-- ==========================================
+         GITAARHALS
+    =========================================== -->
+
+    <div class="fretboard-wrap">
+
+        <div class="guitar">
+
+            <div
+                id="stringNames"
+                class="string-names"
+                aria-label="Snaarnamen"
+            ></div>
+
+            <div
+                id="fretboard"
+                class="fretboard"
+                aria-label="Gitaarhals"
+            ></div>
+
+        </div>
+
+
+        <!-- FRETNUMMERS -->
+
+        <div class="labels-row">
+
+            <div class="labels-spacer"></div>
+
+            <div
+                id="fretLabels"
+                class="fret-labels"
+                aria-label="Fretnummers"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         LEGENDA
+    =========================================== -->
+
+    <div
+        id="legend"
+        class="legend"
+        aria-live="polite"
+    >
+        Lichte bolletjes = hele noten ·
+        donkere bolletjes = halve tonen
+    </div>
+
+    <div class="hint">
+        Op kleinere schermen kun je horizontaal
+        over de oefenkaart schuiven.
+    </div>
+
+</main>
+
+
+<script>
+"use strict";
+
+
+/* ==================================================
+   GITAARINSTELLING
+
+   Intern van lage naar hoge snaar.
+================================================== */
+
+const tuning = [
+    {
+        name: "E",
+        displayName: "E⁶",
+        midi: 40
+    },
+    {
+        name: "A",
+        displayName: "A",
+        midi: 45
+    },
+    {
+        name: "D",
+        displayName: "D",
+        midi: 50
+    },
+    {
+        name: "G",
+        displayName: "G",
+        midi: 55
+    },
+    {
+        name: "B",
+        displayName: "B",
+        midi: 59
+    },
+    {
+        name: "E",
+        displayName: "E¹",
+        midi: 64
+    }
+];
+
+
+const noteNames = [
+    "C",
+    "C♯",
+    "D",
+    "D♯",
+    "E",
+    "F",
+    "F♯",
+    "G",
+    "G♯",
+    "A",
+    "A♯",
+    "B"
+];
+
+
+const singleMarkerFrets = [
+    3,
+    5,
+    7,
+    9
+];
+
+
+const doubleMarkerFret = 12;
+
+
+/* ==================================================
+   ELEMENTEN
+================================================== */
+
+const board =
+    document.getElementById("fretboard");
+
+const stringNames =
+    document.getElementById("stringNames");
+
+const labels =
+    document.getElementById("fretLabels");
+
+const legend =
+    document.getElementById("legend");
+
+const bwButton =
+    document.getElementById("bwButton");
+
+const printButton =
+    document.getElementById("printButton");
+
+const backButton =
+    document.getElementById("backButton");
+
+
+let mode = "all";
+let blackAndWhite = false;
+
+
+/* ==================================================
+   REALISTISCHE FRETVERHOUDINGEN
+
+   Positie van fret n vanaf de topkam:
+
+   x(n) = 1 - 2^(-n/12)
+
+   De breedte van ieder fretvak is het verschil
+   tussen twee opeenvolgende fretposities.
+================================================== */
+
+function calculateFretColumns() {
+    const fretWidths = [];
+
+    let previousPosition = 0;
+
+    for (
+        let fret = 1;
+        fret <= 12;
+        fret += 1
+    ) {
+        const position =
+            1 - Math.pow(
+                2,
+                -fret / 12
+            );
+
+        const width =
+            position -
+            previousPosition;
+
+        fretWidths.push(width);
+
+        previousPosition =
+            position;
+    }
+
+
+    const widestFret =
+        Math.max(...fretWidths);
+
+
+    const ratios =
+        fretWidths.map(
+            width =>
+                width / widestFret
+        );
+
+
+    /*
+       De open-snaarzone is geen echte fret.
+       Deze blijft daarom een compacte vaste kolom.
+    */
+
+    return [
+        "48px",
+        ...ratios.map(
+            ratio =>
+                ratio.toFixed(5) + "fr"
+        )
+    ];
+}
+
+
+/* ==================================================
+   GRID INSTELLEN
+================================================== */
+
+function setupFretGrid() {
+    const columns =
+        calculateFretColumns();
+
+    const gridTemplate =
+        columns.join(" ");
+
+    board.style.gridTemplateColumns =
+        gridTemplate;
+
+    labels.style.gridTemplateColumns =
+        gridTemplate;
+}
+
+
+/* ==================================================
+   SNAARNAMEN
+================================================== */
+
+function drawStringNames() {
+    stringNames.innerHTML = "";
+
+    /*
+       Omgekeerde volgorde:
+       hoge E bovenaan, lage E onderaan.
+    */
+
+    [...tuning]
+        .reverse()
+        .forEach(string => {
+            const element =
+                document.createElement("div");
+
+            element.className =
+                "string-name";
+
+            element.textContent =
+                string.displayName;
+
+            stringNames.appendChild(
+                element
+            );
+        });
+}
+
+
+/* ==================================================
+   TOETSINLEG TOEVOEGEN
+================================================== */
+
+function addFretMarker(
+    cell,
+    fret,
+    stringIndex
+) {
+    /*
+       Enkele toetsinleg op fret 3, 5, 7 en 9.
+
+       De marker wordt tussen de G- en D-snaar
+       geplaatst. In de visuele snaarvolgorde
+       is dit onder stringIndex 2.
+    */
+
+    if (
+        singleMarkerFrets.includes(fret) &&
+        stringIndex === 2
+    ) {
+        const marker =
+            document.createElement("span");
+
+        marker.className =
+            "fret-marker";
+
+        marker.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        cell.appendChild(marker);
+    }
+
+
+    /*
+       Dubbele toetsinleg op fret 12.
+
+       Bovenste marker:
+       tussen de B- en G-snaar.
+
+       Onderste marker:
+       tussen de D- en A-snaar.
+    */
+
+    if (
+        fret === doubleMarkerFret &&
+        (
+            stringIndex === 1 ||
+            stringIndex === 3
+        )
+    ) {
+        const marker =
+            document.createElement("span");
+
+        marker.className =
+            "fret-marker";
+
+        marker.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        cell.appendChild(marker);
+    }
+}
+
+
+/* ==================================================
+   NOOT MAKEN
+================================================== */
+
+function createNote(
+    noteName,
+    isSharp
+) {
+    const note =
+        document.createElement("div");
+
+
+    if (mode === "blank") {
+        note.className =
+            "note blank " +
+            (
+                isSharp
+                    ? "sharp"
+                    : "natural"
+            );
+
+        note.textContent = "";
+
+        note.setAttribute(
+            "aria-label",
+            isSharp
+                ? "Blanco halve noot"
+                : "Blanco hele noot"
+        );
+
+        return note;
+    }
+
+
+    note.className =
+        "note" +
+        (
+            isSharp
+                ? " sharp"
+                : ""
+        );
+
+    note.textContent =
+        noteName;
+
+    note.setAttribute(
+        "aria-label",
+        noteName
+    );
+
+    return note;
+}
+
+
+/* ==================================================
+   GITAARHALS TEKENEN
+================================================== */
+
+function drawFretboard() {
+    board.innerHTML = "";
+
+    const visualTuning =
+        [...tuning].reverse();
+
+
+    visualTuning.forEach(
+        (string, stringIndex) => {
+            for (
+                let fret = 0;
+                fret <= 12;
+                fret += 1
+            ) {
+                const cell =
+                    document.createElement("div");
+
+
+                cell.className =
+                    "cell " +
+                    "string-" +
+                    (stringIndex + 1) +
+                    (
+                        fret === 0
+                            ? " open"
+                            : ""
+                    );
+
+
+                const noteName =
+                    noteNames[
+                        (
+                            string.midi +
+                            fret
+                        ) % 12
+                    ];
+
+
+                const isSharp =
+                    noteName.includes("♯");
+
+
+                /*
+                   De toetsinleg wordt eerst toegevoegd,
+                   zodat ze achter de noot blijft.
+                */
+
+                addFretMarker(
+                    cell,
+                    fret,
+                    stringIndex
+                );
+
+
+                /*
+                   Alle noten
+                */
+
+                if (mode === "all") {
+                    cell.appendChild(
+                        createNote(
+                            noteName,
+                            isSharp
+                        )
+                    );
+                }
+
+
+                /*
+                   Alleen hele noten
+                */
+
+                else if (
+                    mode === "natural" &&
+                    !isSharp
+                ) {
+                    cell.appendChild(
+                        createNote(
+                            noteName,
+                            false
+                        )
+                    );
+                }
+
+
+                /*
+                   Blanco:
+                   alle posities krijgen een
+                   invulbaar rondje.
+                */
+
+                else if (mode === "blank") {
+                    cell.appendChild(
+                        createNote(
+                            noteName,
+                            isSharp
+                        )
+                    );
+                }
+
+
+                board.appendChild(cell);
+            }
+        }
+    );
+}
+
+
+/* ==================================================
+   FRETNUMMERS
+================================================== */
+
+function drawFretLabels() {
+    labels.innerHTML = "";
+
+    for (
+        let fret = 0;
+        fret <= 12;
+        fret += 1
+    ) {
+        const element =
+            document.createElement("div");
+
+        element.className =
+            "fret-label";
+
+        element.textContent =
+            fret === 0
+                ? "Open"
+                : fret;
+
+        labels.appendChild(element);
+    }
+}
+
+
+/* ==================================================
+   LEGENDA
+================================================== */
+
+function updateLegend() {
+    if (mode === "all") {
+        if (blackAndWhite) {
+            legend.textContent =
+                "Enkele rand = hele noot · " +
+                "dubbele rand = halve noot";
+        } else {
+            legend.textContent =
+                "Lichte bolletjes = hele noten · " +
+                "donkere bolletjes = halve tonen";
+        }
+    }
+
+    else if (mode === "natural") {
+        legend.textContent =
+            "Oefenkaart met alleen de hele noten";
+    }
+
+    else if (mode === "blank") {
+        if (blackAndWhite) {
+            legend.textContent =
+                "Vul de juiste noot in · " +
+                "enkele rand = hele noot · " +
+                "dubbele rand = halve noot";
+        } else {
+            legend.textContent =
+                "Vul de juiste noot in · " +
+                "gouden rand = hele noot · " +
+                "bruine rand = halve noot";
+        }
+    }
+}
+
+
+/* ==================================================
+   MODUSKNOPPEN
+================================================== */
+
+document
+    .querySelectorAll("[data-mode]")
+    .forEach(button => {
+        button.addEventListener(
+            "click",
+            () => {
+                mode =
+                    button.dataset.mode;
+
+                document
+                    .querySelectorAll(
+                        "[data-mode]"
+                    )
+                    .forEach(otherButton => {
+                        otherButton.classList.toggle(
+                            "active",
+                            otherButton === button
+                        );
+                    });
+
+                drawFretboard();
+                updateLegend();
+            }
+        );
+    });
+
+
+/* ==================================================
+   ZWART-WITWEERGAVE
+================================================== */
+
+bwButton.addEventListener(
+    "click",
+    () => {
+        blackAndWhite =
+            !blackAndWhite;
+
+        document.body.classList.toggle(
+            "bw-mode",
+            blackAndWhite
+        );
+
+        bwButton.setAttribute(
+            "aria-pressed",
+            String(blackAndWhite)
+        );
+
+        bwButton.textContent =
+            blackAndWhite
+                ? "◐ Kleur"
+                : "◐ Zwart-wit";
+
+        updateLegend();
+    }
+);
+
+
+/* ==================================================
+   AFDRUKKEN
+================================================== */
+
+printButton.addEventListener(
+    "click",
+    () => {
+        window.print();
+    }
+);
+
+
+/* ==================================================
+   TERUG
+================================================== */
+
+backButton.addEventListener(
+    "click",
+    () => {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href =
+                "index.html";
+        }
+    }
+);
+
+
+/* ==================================================
+   INITIALISATIE
+================================================== */
+
+setupFretGrid();
+drawStringNames();
+drawFretboard();
+drawFretLabels();
+updateLegend();
+</script>
+
+</body>
+</html>
