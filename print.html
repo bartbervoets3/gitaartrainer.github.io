@@ -2674,44 +2674,42 @@ printButton
 
 /* =========================================================
    TERUG
+   KODULAR:
+      stuur BACK_TO_INDEX
+   OUDERE APP INVENTOR BRIDGE:
+      stuur BACK_TO_INDEX
+   NORMALE BROWSER:
+      ga naar index.html
 ========================================================= */
-
 backButton
     .addEventListener(
-
         "click",
-
         () => {
-
+            if (
+                typeof window.Kodular !== "undefined"
+                &&
+                typeof window.Kodular.setWebViewString === "function"
+            ) {
+                window.Kodular.setWebViewString(
+                    "BACK_TO_INDEX"
+                );
+                return;
+            }
 
             if (
-
-                window.history.length
-                >
-                1
-
+                typeof window.AppInventor !== "undefined"
+                &&
+                typeof window.AppInventor.setWebViewString === "function"
             ) {
-
-
-                window.history
-                    .back();
-
+                window.AppInventor.setWebViewString(
+                    "BACK_TO_INDEX"
+                );
+                return;
             }
 
-
-            else {
-
-
-                window.location.href =
-                    "index.html";
-
-            }
-
+            window.location.href = "index.html";
         }
-
     );
-
-
 
 /* =========================================================
    INITIALISATIE
