@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
+
 <meta charset="UTF-8">
 
 <meta
@@ -10,6 +12,7 @@
 
 <title>Gitaarhals Oefenkaart</title>
 
+
 <style>
 
 /* =========================================================
@@ -17,6 +20,7 @@
 ========================================================= */
 
 :root {
+
     --bg: #17120f;
 
     --wood-dark: #39231d;
@@ -34,6 +38,7 @@
 
     --blank-natural: #c59045;
     --blank-sharp: #854936;
+
 }
 
 
@@ -44,12 +49,16 @@
 
 html,
 body {
+
     margin: 0;
+
     min-height: 100%;
+
 }
 
 
 body {
+
     padding: 20px;
 
     font-family:
@@ -58,22 +67,32 @@ body {
         sans-serif;
 
     background:
+
         radial-gradient(
+
             circle at top,
+
             #352419,
+
             var(--bg) 62%
+
         );
 
     color: var(--cream);
+
 }
 
 
 .page {
+
     width: 100%;
+
     max-width: 1200px;
 
     margin: 0 auto;
+
 }
+
 
 
 /* =========================================================
@@ -81,18 +100,22 @@ body {
 ========================================================= */
 
 h1 {
+
     margin: 0;
 
     color: var(--gold);
 
     font-size: 25px;
+
     font-weight: 600;
 
     text-align: center;
+
 }
 
 
 .subtitle {
+
     margin: 5px 0 18px;
 
     color: #cabba5;
@@ -100,7 +123,9 @@ h1 {
     font-size: 13px;
 
     text-align: center;
+
 }
+
 
 
 /* =========================================================
@@ -108,19 +133,24 @@ h1 {
 ========================================================= */
 
 .toolbar {
+
     display: flex;
 
     justify-content: center;
+
     align-items: center;
+
     flex-wrap: wrap;
 
     gap: 8px;
 
     margin-bottom: 18px;
+
 }
 
 
 button {
+
     min-height: 38px;
 
     padding: 8px 14px;
@@ -132,61 +162,83 @@ button {
     border-radius: 8px;
 
     background:
+
         linear-gradient(
+
             #88583b,
+
             #603a29
+
         );
 
     color: #fff4e5;
 
     font-size: 13px;
+
     font-weight: 600;
 
     cursor: pointer;
 
     transition:
+
         background 0.15s ease,
+
         border-color 0.15s ease,
+
         transform 0.1s ease;
+
 }
 
 
 button:hover {
+
     border-color: #d09a6d;
 
     filter:
         brightness(1.08);
+
 }
 
 
 button:active {
+
     transform:
         scale(0.97);
+
 }
 
 
 button:focus-visible {
+
     outline:
         2px solid
         #e6bc78;
 
     outline-offset: 2px;
+
 }
 
 
 button.active {
+
     border-color: #e0b774;
 
     background:
+
         linear-gradient(
+
             #ddb87b,
+
             #b98048
+
         );
 
     color: #29170d;
 
     font-weight: 700;
+
 }
+
 
 
 /* =========================================================
@@ -194,6 +246,7 @@ button.active {
 ========================================================= */
 
 .fretboard-wrap {
+
     width: 100%;
 
     overflow-x: auto;
@@ -201,7 +254,9 @@ button.active {
     padding-bottom: 4px;
 
     -webkit-overflow-scrolling: touch;
+
 }
+
 
 
 /* =========================================================
@@ -209,12 +264,15 @@ button.active {
 ========================================================= */
 
 .guitar {
+
     display: flex;
 
     width: 100%;
 
     min-width: 930px;
+
 }
+
 
 
 /* =========================================================
@@ -222,29 +280,38 @@ button.active {
 ========================================================= */
 
 .string-names {
+
     width: 52px;
+
     flex: 0 0 52px;
 
     display: grid;
 
     grid-template-rows:
+
         repeat(6, 50px);
 
     color: #e5c796;
 
     font-size: 13px;
+
     font-weight: 700;
 
     text-align: center;
+
 }
 
 
 .string-name {
+
     display: flex;
 
     align-items: center;
+
     justify-content: center;
+
 }
+
 
 
 /* =========================================================
@@ -252,6 +319,7 @@ button.active {
 ========================================================= */
 
 .fretboard {
+
     position: relative;
 
     flex: 1;
@@ -259,29 +327,42 @@ button.active {
     display: grid;
 
     grid-template-rows:
+
         repeat(6, 50px);
 
     border:
+
         3px solid
         #b88a5a;
 
     border-radius: 7px;
 
     background:
+
         linear-gradient(
+
             90deg,
+
             var(--wood-dark) 0%,
+
             var(--wood-mid) 48%,
+
             var(--wood-light) 68%,
+
             var(--wood-dark) 100%
+
         );
 
     box-shadow:
+
         inset 0 0 25px #0009,
+
         0 5px 14px #0006;
 
     overflow: hidden;
+
 }
+
 
 
 /* =========================================================
@@ -289,29 +370,37 @@ button.active {
 ========================================================= */
 
 .cell {
+
     position: relative;
 
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     min-width: 0;
 
     border-right:
+
         2px solid
         #aaa090;
+
 }
 
 
 .cell.open {
+
     border-right:
+
         5px solid
         #ddd5c4;
 
     background:
         #261713;
+
 }
+
 
 
 /* =========================================================
@@ -319,6 +408,7 @@ button.active {
 ========================================================= */
 
 .cell::after {
+
     content: "";
 
     position: absolute;
@@ -326,60 +416,79 @@ button.active {
     z-index: 1;
 
     left: 0;
+
     right: 0;
 
     top: 50%;
 
     transform:
+
         translateY(-50%);
 
-    background: #d7d1c4;
+    background:
+        #d7d1c4;
 
     box-shadow:
-        0 1px 1px #000;
+
+        0 1px 1px
+        #000;
+
 }
 
 
-/* Hoge E */
+/* hoge E */
 
 .cell.string-1::after {
+
     height: 1px;
+
 }
 
 
 /* B */
 
 .cell.string-2::after {
+
     height: 1.2px;
+
 }
 
 
 /* G */
 
 .cell.string-3::after {
+
     height: 1.4px;
+
 }
 
 
 /* D */
 
 .cell.string-4::after {
+
     height: 1.7px;
+
 }
 
 
 /* A */
 
 .cell.string-5::after {
+
     height: 2px;
+
 }
 
 
-/* Lage E */
+/* lage E */
 
 .cell.string-6::after {
+
     height: 2.3px;
+
 }
+
 
 
 /* =========================================================
@@ -387,55 +496,67 @@ button.active {
 ========================================================= */
 
 .note {
+
     position: relative;
 
     z-index: 3;
 
     width: 28px;
+
     height: 28px;
 
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     flex: 0 0 auto;
 
     border:
+
         2px solid
         var(--natural-border);
 
     border-radius: 50%;
 
     background:
+
         var(--natural-fill);
 
     color:
         #25160e;
 
     font-size: 11px;
+
     font-weight: 700;
 
     line-height: 1;
 
     box-shadow:
+
         0 2px 4px
         #0007;
+
 }
 
 
-/* Halve toon */
-
 .note.sharp {
+
     border-color:
+
         var(--sharp-border);
 
     background:
+
         var(--sharp-fill);
 
     color:
+
         #f8efe2;
+
 }
+
 
 
 /* =========================================================
@@ -443,7 +564,9 @@ button.active {
 ========================================================= */
 
 .note.blank {
+
     width: 30px;
+
     height: 30px;
 
     background:
@@ -454,28 +577,36 @@ button.active {
 
     box-shadow:
         none;
+
 }
 
 
-/* Hele noten */
+/* hele noot */
 
 .note.blank.natural {
+
     border:
+
         2.5px solid
         var(--blank-natural);
+
 }
 
 
-/* Halve tonen */
+/* halve noot */
 
 .note.blank.sharp {
+
     border:
+
         2.5px solid
         var(--blank-sharp);
 
     background:
         #ffffff;
+
 }
+
 
 
 /* =========================================================
@@ -483,23 +614,28 @@ button.active {
 ========================================================= */
 
 .fret-marker {
+
     position: absolute;
 
     z-index: 0;
 
     left: 50%;
+
     top: 100%;
 
     width: 13px;
+
     height: 13px;
 
     transform:
+
         translate(
             -50%,
             -50%
         );
 
     border:
+
         1px solid
         #ead9b5;
 
@@ -507,20 +643,29 @@ button.active {
         50%;
 
     background:
+
         radial-gradient(
+
             circle at 35% 30%,
+
             #fff9df 0%,
+
             #d7c59a 48%,
+
             #9b8057 100%
+
         );
 
     box-shadow:
+
         0 1px 3px
         #0008;
 
     pointer-events:
         none;
+
 }
+
 
 
 /* =========================================================
@@ -528,6 +673,7 @@ button.active {
 ========================================================= */
 
 .labels-row {
+
     display: flex;
 
     width: 100%;
@@ -535,18 +681,22 @@ button.active {
     min-width: 930px;
 
     margin-top: 7px;
+
 }
 
 
 .labels-spacer {
+
     width: 52px;
 
     flex:
         0 0 52px;
+
 }
 
 
 .fret-labels {
+
     flex: 1;
 
     display: grid;
@@ -559,17 +709,21 @@ button.active {
 
     text-align:
         center;
+
 }
 
 
 .fret-label {
+
     display: flex;
 
     justify-content:
         center;
 
     min-width: 0;
+
 }
+
 
 
 /* =========================================================
@@ -577,6 +731,7 @@ button.active {
 ========================================================= */
 
 .legend {
+
     margin-top: 17px;
 
     color:
@@ -587,10 +742,12 @@ button.active {
 
     text-align:
         center;
+
 }
 
 
 .hint {
+
     margin-top: 7px;
 
     color:
@@ -601,7 +758,9 @@ button.active {
 
     text-align:
         center;
+
 }
+
 
 
 /* =========================================================
@@ -609,17 +768,21 @@ button.active {
 ========================================================= */
 
 body.bw-mode {
+
     background:
         #ffffff;
 
     color:
         #000000;
+
 }
 
 
 body.bw-mode h1 {
+
     color:
         #000000;
+
 }
 
 
@@ -628,15 +791,19 @@ body.bw-mode .legend,
 body.bw-mode .hint,
 body.bw-mode .string-names,
 body.bw-mode .fret-labels {
+
     color:
         #000000;
+
 }
 
 
-/* Toets wit */
+/* witte toets */
 
 body.bw-mode .fretboard {
+
     border:
+
         1.5px solid
         #000000;
 
@@ -645,75 +812,99 @@ body.bw-mode .fretboard {
 
     box-shadow:
         none;
+
 }
 
 
-/* Frets */
+/* frets */
 
 body.bw-mode .cell {
+
     border-right:
+
         1.2px solid
         #555555;
+
 }
 
 
-/* Topkam */
+/* topkam */
 
 body.bw-mode .cell.open {
+
     border-right:
+
         3px solid
         #000000;
 
     background:
         #ffffff;
+
 }
 
 
-/* Snaren */
+/* snaren */
 
 body.bw-mode .cell::after {
+
     background:
         #000000;
 
     box-shadow:
         none;
+
 }
 
 
 body.bw-mode .cell.string-1::after {
+
     height: 0.7px;
+
 }
 
 
 body.bw-mode .cell.string-2::after {
+
     height: 0.9px;
+
 }
 
 
 body.bw-mode .cell.string-3::after {
+
     height: 1.1px;
+
 }
 
 
 body.bw-mode .cell.string-4::after {
+
     height: 1.4px;
+
 }
 
 
 body.bw-mode .cell.string-5::after {
+
     height: 1.7px;
+
 }
 
 
 body.bw-mode .cell.string-6::after {
+
     height: 2px;
+
 }
 
 
-/* Hele noot */
+
+/* hele noot */
 
 body.bw-mode .note {
+
     border:
+
         1.8px solid
         #000000;
 
@@ -725,13 +916,16 @@ body.bw-mode .note {
 
     box-shadow:
         none;
+
 }
 
 
-/* Halve noot */
+/* halve noot */
 
 body.bw-mode .note.sharp {
+
     border:
+
         3px double
         #000000;
 
@@ -743,55 +937,69 @@ body.bw-mode .note.sharp {
 
     box-shadow:
         none;
+
 }
 
 
-/* Blanco hele noot */
+/* blanco hele noot */
 
 body.bw-mode .note.blank.natural {
+
     border:
+
         1.8px solid
         #000000;
 
     background:
         #ffffff;
+
 }
 
 
-/* Blanco halve noot */
+/* blanco halve noot */
 
 body.bw-mode .note.blank.sharp {
+
     border:
+
         3px double
         #000000;
 
     background:
         #ffffff;
+
 }
 
 
-/* Inleg */
+/* toetsinleg */
 
 body.bw-mode .fret-marker {
+
     width: 10px;
+
     height: 10px;
 
-    border: none;
+    border:
+        none;
 
     background:
         #000000;
 
     box-shadow:
         none;
+
 }
 
 
+
 /* =========================================================
-   KNOPPEN IN ZWART-WIT
+   BEDIENKNOPPEN ZWART-WIT
 ========================================================= */
 
 body.bw-mode .toolbar button {
+
     border:
+
         1.5px solid
         #000000;
 
@@ -806,10 +1014,12 @@ body.bw-mode .toolbar button {
 
     filter:
         none;
+
 }
 
 
 body.bw-mode .toolbar button.active {
+
     border-color:
         #000000;
 
@@ -818,10 +1028,12 @@ body.bw-mode .toolbar button.active {
 
     color:
         #ffffff;
+
 }
 
 
 body.bw-mode .toolbar button:hover {
+
     background:
         #eeeeee;
 
@@ -830,16 +1042,20 @@ body.bw-mode .toolbar button:hover {
 
     filter:
         none;
+
 }
 
 
 body.bw-mode .toolbar button.active:hover {
+
     background:
         #000000;
 
     color:
         #ffffff;
+
 }
+
 
 
 /* =========================================================
@@ -851,88 +1067,121 @@ body.bw-mode .toolbar button.active:hover {
 ) {
 
     body {
-        padding: 10px;
-    }
-
-    h1 {
-        font-size: 21px;
-    }
-
-    .subtitle {
-        font-size: 12px;
-    }
-
-    button {
-        min-height: 40px;
 
         padding:
+            10px;
+
+    }
+
+
+    h1 {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .subtitle {
+
+        font-size:
+            12px;
+
+    }
+
+
+    button {
+
+        min-height:
+            40px;
+
+        padding:
+
             8px 11px;
+
     }
 
 }
 
 
+
 /* =========================================================
-   PRINT
+   PRINTLAYOUT
 ========================================================= */
 
 @media print {
 
     @page {
+
         size:
             A4 landscape;
 
         margin:
             9mm;
+
     }
 
 
     html,
     body {
+
         background:
             #ffffff !important;
+
     }
 
 
     body {
-        margin: 0;
 
-        padding: 0;
+        margin:
+            0;
+
+        padding:
+            0;
+
     }
 
 
     .page {
+
         max-width:
             none;
+
     }
 
 
     /*
-       Bedieningsknoppen worden
-       niet mee afgedrukt.
+       Knoppen niet mee afdrukken
     */
 
     .toolbar,
     .hint {
+
         display:
             none !important;
+
     }
 
 
     .fretboard-wrap {
+
         overflow:
             visible;
+
     }
 
 
     .guitar,
     .labels-row {
+
         min-width:
             0;
+
     }
 
 
     .fretboard {
+
         break-inside:
             avoid;
 
@@ -941,72 +1190,87 @@ body.bw-mode .toolbar button.active:hover {
 
         -webkit-print-color-adjust:
             exact;
+
     }
 
 
     .note,
     .fret-marker {
+
         print-color-adjust:
             exact;
 
         -webkit-print-color-adjust:
             exact;
+
     }
 
 
-    /*
-       Zwart-witafdruk
-    */
+    /* zwart-wit print */
 
     body.bw-mode h1,
     body.bw-mode .subtitle,
     body.bw-mode .legend,
     body.bw-mode .string-names,
     body.bw-mode .fret-labels {
+
         color:
             #000000 !important;
+
     }
 
 
     body.bw-mode .fretboard {
+
         background:
             #ffffff !important;
 
         border:
+
             1.5px solid
             #000000 !important;
 
         box-shadow:
             none !important;
+
     }
 
 
     body.bw-mode .cell {
+
         border-right-color:
+
             #555555 !important;
+
     }
 
 
     body.bw-mode .cell.open {
+
         background:
             #ffffff !important;
 
         border-right:
+
             3px solid
             #000000 !important;
+
     }
 
 
     body.bw-mode .cell::after {
+
         background:
             #000000 !important;
 
         box-shadow:
             none !important;
+
     }
 
 
     body.bw-mode .note {
+
         background:
             #ffffff !important;
 
@@ -1014,15 +1278,18 @@ body.bw-mode .toolbar button.active:hover {
             #000000 !important;
 
         border:
+
             1.8px solid
             #000000 !important;
 
         box-shadow:
             none !important;
+
     }
 
 
     body.bw-mode .note.sharp {
+
         background:
             #f1f1f1 !important;
 
@@ -1030,60 +1297,78 @@ body.bw-mode .toolbar button.active:hover {
             #000000 !important;
 
         border:
+
             3px double
             #000000 !important;
+
     }
 
 
     body.bw-mode .note.blank.natural {
+
         background:
             #ffffff !important;
 
         border:
+
             1.8px solid
             #000000 !important;
+
     }
 
 
     body.bw-mode .note.blank.sharp {
+
         background:
             #ffffff !important;
 
         border:
+
             3px double
             #000000 !important;
+
     }
 
 
     body.bw-mode .fret-marker {
+
         background:
             #000000 !important;
 
         border:
             none !important;
+
     }
 
 }
 
 </style>
+
 </head>
+
 
 
 <body>
 
+
 <main class="page">
+
 
     <h1>
         Gitaarhals Oefenkaart
     </h1>
 
+
     <div class="subtitle">
+
         Standaardstemming E – A – D – G – B – E · fret 0–12
+
     </div>
 
 
+
     <!-- =================================================
-         BEDIENINGSKNOPPEN
+         BEDIENING
     ================================================== -->
 
     <div
@@ -1091,29 +1376,39 @@ body.bw-mode .toolbar button.active:hover {
         aria-label="Oefenkaartinstellingen"
     >
 
+
         <button
             type="button"
             data-mode="all"
             class="active"
         >
+
             Alle noten
+
         </button>
+
 
 
         <button
             type="button"
             data-mode="natural"
         >
+
             Hele noten
+
         </button>
+
 
 
         <button
             type="button"
             data-mode="blank"
         >
+
             Blanco
+
         </button>
+
 
 
         <button
@@ -1121,26 +1416,36 @@ body.bw-mode .toolbar button.active:hover {
             id="bwButton"
             aria-pressed="false"
         >
+
             ◐ Zwart-wit
+
         </button>
+
 
 
         <button
             type="button"
             id="printButton"
         >
+
             ⎙ Afdrukken
+
         </button>
+
 
 
         <button
             type="button"
             id="backButton"
         >
+
             ← Terug
+
         </button>
 
+
     </div>
+
 
 
     <!-- =================================================
@@ -1149,7 +1454,9 @@ body.bw-mode .toolbar button.active:hover {
 
     <div class="fretboard-wrap">
 
+
         <div class="guitar">
+
 
             <div
                 id="stringNames"
@@ -1162,14 +1469,15 @@ body.bw-mode .toolbar button.active:hover {
                 class="fretboard"
             ></div>
 
+
         </div>
 
 
-        <!-- =============================================
-             FRETNUMMERS
-        ============================================== -->
+
+        <!-- FRETNUMMERS -->
 
         <div class="labels-row">
+
 
             <div
                 class="labels-spacer"
@@ -1181,9 +1489,12 @@ body.bw-mode .toolbar button.active:hover {
                 class="fret-labels"
             ></div>
 
+
         </div>
 
+
     </div>
+
 
 
     <!-- =================================================
@@ -1195,27 +1506,31 @@ body.bw-mode .toolbar button.active:hover {
         class="legend"
         aria-live="polite"
     >
+
         Lichte bolletjes = hele noten ·
         donkere bolletjes = halve tonen
+
     </div>
 
 
     <div class="hint">
+
         Op kleinere schermen kun je horizontaal over de oefenkaart schuiven.
+
     </div>
+
 
 </main>
 
 
+
 <script>
+
 "use strict";
 
 
 /* =========================================================
    STEMMING
-
-   Interne volgorde:
-   lage E → hoge E
 ========================================================= */
 
 const tuning = [
@@ -1253,6 +1568,7 @@ const tuning = [
 ];
 
 
+
 const noteNames = [
 
     "C",
@@ -1277,17 +1593,20 @@ const noteNames = [
 ];
 
 
-const singleMarkerFrets =
-    [
-        3,
-        5,
-        7,
-        9
-    ];
+
+const singleMarkerFrets = [
+
+    3,
+    5,
+    7,
+    9
+
+];
 
 
 const doubleMarkerFret =
     12;
+
 
 
 /* =========================================================
@@ -1336,6 +1655,7 @@ const backButton =
     );
 
 
+
 let mode =
     "all";
 
@@ -1344,39 +1664,55 @@ let blackAndWhite =
     false;
 
 
+
 /* =========================================================
    REALISTISCHE FRETVERDELING
-
-   Positie fret n:
 
    x = 1 - 2^(-n / 12)
 ========================================================= */
 
 function calculateFretColumns() {
 
-    const widths = [];
+
+    const widths =
+        [];
+
 
     let previous =
         0;
 
 
+
     for (
+
         let fret = 1;
+
         fret <= 12;
+
         fret++
+
     ) {
 
+
         const position =
+
             1 -
+
             Math.pow(
+
                 2,
+
                 -fret / 12
+
             );
 
 
+
         widths.push(
+
             position -
             previous
+
         );
 
 
@@ -1386,18 +1722,28 @@ function calculateFretColumns() {
     }
 
 
+
     const maximum =
+
         Math.max(
+
             ...widths
+
         );
+
 
 
     const ratios =
+
         widths.map(
+
             width =>
+
                 width /
                 maximum
+
         );
+
 
 
     return [
@@ -1405,9 +1751,13 @@ function calculateFretColumns() {
         "48px",
 
         ...ratios.map(
+
             ratio =>
+
                 ratio.toFixed(5)
-                + "fr"
+                +
+                "fr"
+
         )
 
     ];
@@ -1415,20 +1765,25 @@ function calculateFretColumns() {
 }
 
 
+
 /* =========================================================
-   GRID INSTELLEN
+   GRID
 ========================================================= */
 
 function setupGrid() {
 
+
     const grid =
+
         calculateFretColumns()
             .join(" ");
+
 
 
     board.style
         .gridTemplateColumns =
         grid;
+
 
 
     fretLabels.style
@@ -1438,48 +1793,58 @@ function setupGrid() {
 }
 
 
+
 /* =========================================================
    SNAARNAMEN
 ========================================================= */
 
 function drawStringNames() {
 
+
     stringNames.innerHTML =
         "";
 
 
-    /*
-       Visueel:
-       hoge E bovenaan
-    */
 
     [...tuning]
+
         .reverse()
+
         .forEach(
+
             string => {
 
+
                 const label =
-                    document.createElement(
-                        "div"
-                    );
+
+                    document
+                        .createElement(
+                            "div"
+                        );
+
 
 
                 label.className =
                     "string-name";
 
 
+
                 label.textContent =
                     string.label;
 
 
-                stringNames.appendChild(
-                    label
-                );
+
+                stringNames
+                    .appendChild(
+                        label
+                    );
 
             }
+
         );
 
 }
+
 
 
 /* =========================================================
@@ -1487,34 +1852,47 @@ function drawStringNames() {
 ========================================================= */
 
 function addMarker(
+
     cell,
+
     fret,
+
     stringIndex
+
 ) {
 
-    /*
-       Eén marker:
-       fret 3, 5, 7, 9
 
-       tussen G en D.
+    /*
+       enkele inleg:
+       3, 5, 7, 9
     */
 
     if (
-        singleMarkerFrets.includes(
-            fret
-        )
+
+        singleMarkerFrets
+            .includes(
+                fret
+            )
+
         &&
+
         stringIndex === 2
+
     ) {
 
+
         const marker =
-            document.createElement(
-                "span"
-            );
+
+            document
+                .createElement(
+                    "span"
+                );
+
 
 
         marker.className =
             "fret-marker";
+
 
 
         cell.appendChild(
@@ -1524,28 +1902,44 @@ function addMarker(
     }
 
 
+
     /*
-       Dubbele marker fret 12.
+       dubbele inleg:
+       fret 12
     */
 
     if (
-        fret === doubleMarkerFret
+
+        fret ===
+            doubleMarkerFret
+
         &&
+
         (
+
             stringIndex === 1
+
             ||
+
             stringIndex === 3
+
         )
+
     ) {
 
+
         const marker =
-            document.createElement(
-                "span"
-            );
+
+            document
+                .createElement(
+                    "span"
+                );
+
 
 
         marker.className =
             "fret-marker";
+
 
 
         cell.appendChild(
@@ -1555,6 +1949,7 @@ function addMarker(
     }
 
 }
+
 
 
 /* =========================================================
@@ -1562,37 +1957,54 @@ function addMarker(
 ========================================================= */
 
 function createNote(
+
     noteName,
+
     isSharp
+
 ) {
 
+
     const note =
-        document.createElement(
-            "div"
-        );
+
+        document
+            .createElement(
+                "div"
+            );
 
 
-    /*
-       BLANCO
-    */
+
+    /* BLANCO */
 
     if (
-        mode === "blank"
+
+        mode ===
+            "blank"
+
     ) {
+
 
         note.className =
 
             "note blank "
+
             +
+
             (
+
                 isSharp
+
                     ? "sharp"
+
                     : "natural"
+
             );
+
 
 
         note.textContent =
             "";
+
 
 
         return note;
@@ -1600,23 +2012,30 @@ function createNote(
     }
 
 
-    /*
-       NORMALE NOTEN
-    */
+
+    /* NORMAAL */
 
     note.className =
 
         "note"
+
         +
+
         (
+
             isSharp
+
                 ? " sharp"
+
                 : ""
+
         );
+
 
 
     note.textContent =
         noteName;
+
 
 
     return note;
@@ -1624,72 +2043,111 @@ function createNote(
 }
 
 
+
 /* =========================================================
-   GITAARHALS TEKENEN
+   GITAARHALS
 ========================================================= */
 
 function drawFretboard() {
+
 
     board.innerHTML =
         "";
 
 
+
     const visualTuning =
+
         [...tuning]
             .reverse();
+
 
 
     visualTuning
         .forEach(
 
             (
+
                 string,
+
                 stringIndex
+
             ) => {
 
 
+
                 for (
+
                     let fret = 0;
+
                     fret <= 12;
+
                     fret++
+
                 ) {
 
+
+
                     const cell =
+
                         document
                             .createElement(
                                 "div"
                             );
 
 
+
                     cell.className =
 
                         "cell "
+
                         +
+
                         "string-"
+
                         +
+
                         (
+
                             stringIndex
                             + 1
+
                         )
+
                         +
+
                         (
+
                             fret === 0
+
                                 ? " open"
+
                                 : ""
+
                         );
+
 
 
                     const noteName =
 
                         noteNames[
+
                             (
+
                                 string.midi
+
                                 +
+
                                 fret
+
                             )
+
                             %
+
                             12
+
                         ];
+
 
 
                     const isSharp =
@@ -1700,73 +2158,99 @@ function drawFretboard() {
                             );
 
 
-                    /*
-                       Eerst marker,
-                       zodat deze achter
-                       het nootrondje ligt.
-                    */
 
                     addMarker(
+
                         cell,
+
                         fret,
+
                         stringIndex
+
                     );
+
 
 
                     /* ALLE NOTEN */
 
                     if (
-                        mode === "all"
+
+                        mode ===
+                            "all"
+
                     ) {
+
 
                         cell.appendChild(
 
                             createNote(
+
                                 noteName,
+
                                 isSharp
+
                             )
 
                         );
 
                     }
+
 
 
                     /* HELE NOTEN */
 
                     else if (
-                        mode === "natural"
+
+                        mode ===
+                            "natural"
+
                         &&
+
                         !isSharp
+
                     ) {
+
 
                         cell.appendChild(
 
                             createNote(
+
                                 noteName,
+
                                 false
+
                             )
 
                         );
 
                     }
+
 
 
                     /* BLANCO */
 
                     else if (
-                        mode === "blank"
+
+                        mode ===
+                            "blank"
+
                     ) {
+
 
                         cell.appendChild(
 
                             createNote(
+
                                 noteName,
+
                                 isSharp
+
                             )
 
                         );
 
                     }
+
 
 
                     board.appendChild(
@@ -1782,46 +2266,63 @@ function drawFretboard() {
 }
 
 
+
 /* =========================================================
    FRETNUMMERS
 ========================================================= */
 
 function drawFretLabels() {
 
+
     fretLabels.innerHTML =
         "";
 
 
+
     for (
+
         let fret = 0;
+
         fret <= 12;
+
         fret++
+
     ) {
 
+
         const label =
-            document.createElement(
-                "div"
-            );
+
+            document
+                .createElement(
+                    "div"
+                );
+
 
 
         label.className =
             "fret-label";
 
 
+
         label.textContent =
 
             fret === 0
+
                 ? "Open"
+
                 : fret;
 
 
-        fretLabels.appendChild(
-            label
-        );
+
+        fretLabels
+            .appendChild(
+                label
+            );
 
     }
 
 }
+
 
 
 /* =========================================================
@@ -1832,63 +2333,108 @@ function updateLegend() {
 
 
     if (
+
         mode === "all"
+
         &&
+
         !blackAndWhite
+
     ) {
 
+
         legend.textContent =
-            "Lichte bolletjes = hele noten · donkere bolletjes = halve tonen";
+
+            "Lichte bolletjes = hele noten · " +
+
+            "donkere bolletjes = halve tonen";
 
     }
 
 
+
     else if (
+
         mode === "all"
+
         &&
+
         blackAndWhite
+
     ) {
 
+
         legend.textContent =
-            "Enkele rand = hele noot · dubbele rand = halve noot";
+
+            "Enkele rand = hele noot · " +
+
+            "dubbele rand = halve noot";
 
     }
 
 
+
     else if (
+
         mode === "natural"
+
     ) {
 
+
         legend.textContent =
+
             "Oefenkaart met alleen de hele noten";
 
     }
 
 
+
     else if (
+
         mode === "blank"
+
         &&
+
         !blackAndWhite
+
     ) {
 
+
         legend.textContent =
-            "Vul de juiste noot in · gouden rand = hele noot · bruine rand = halve noot";
+
+            "Vul de juiste noot in · " +
+
+            "gouden rand = hele noot · " +
+
+            "bruine rand = halve noot";
 
     }
 
 
+
     else if (
+
         mode === "blank"
+
         &&
+
         blackAndWhite
+
     ) {
 
+
         legend.textContent =
-            "Vul de juiste noot in · enkele rand = hele noot · dubbele rand = halve noot";
+
+            "Vul de juiste noot in · " +
+
+            "enkele rand = hele noot · " +
+
+            "dubbele rand = halve noot";
 
     }
 
 }
+
 
 
 /* =========================================================
@@ -1903,23 +2449,32 @@ document
 
         button => {
 
+
             button.addEventListener(
 
                 "click",
 
                 () => {
 
+
                     mode =
-                        button.dataset.mode;
+
+                        button
+                            .dataset
+                            .mode;
+
 
 
                     document
+
                         .querySelectorAll(
                             "[data-mode]"
                         )
+
                         .forEach(
 
                             otherButton => {
+
 
                                 otherButton
                                     .classList
@@ -1938,7 +2493,9 @@ document
                         );
 
 
+
                     drawFretboard();
+
 
                     updateLegend();
 
@@ -1949,6 +2506,7 @@ document
         }
 
     );
+
 
 
 /* =========================================================
@@ -1962,13 +2520,19 @@ bwButton
 
         () => {
 
+
             blackAndWhite =
+
                 !blackAndWhite;
 
 
+
             document
+
                 .body
+
                 .classList
+
                 .toggle(
 
                     "bw-mode",
@@ -1978,7 +2542,9 @@ bwButton
                 );
 
 
+
             bwButton
+
                 .setAttribute(
 
                     "aria-pressed",
@@ -1990,14 +2556,15 @@ bwButton
                 );
 
 
-            bwButton
-                .textContent =
+
+            bwButton.textContent =
 
                 blackAndWhite
 
                     ? "◐ Kleur"
 
                     : "◐ Zwart-wit";
+
 
 
             updateLegend();
@@ -2007,16 +2574,17 @@ bwButton
     );
 
 
+
 /* =========================================================
    AFDRUKKEN
 
-   1. Kodular:
-      window.Kodular.setWebViewString()
+   KODULAR:
+      stuur PRINT_PAGE
 
-   2. Fallback oudere WebViewer:
-      window.AppInventor.setWebViewString()
+   OUDERE APP INVENTOR BRIDGE:
+      stuur PRINT_PAGE
 
-   3. Normale browser:
+   NORMALE BROWSER:
       window.print()
 ========================================================= */
 
@@ -2029,22 +2597,27 @@ printButton
 
 
             /* =============================================
-               KODULAR
+               KODULAR WEBVIEWER
             ============================================= */
 
             if (
+
                 typeof window.Kodular
                     !== "undefined"
+
                 &&
+
                 typeof window.Kodular
                     .setWebViewString
                     === "function"
+
             ) {
+
 
                 window.Kodular
                     .setWebViewString(
 
-                        "PRINT_IN_BROWSER"
+                        "PRINT_PAGE"
 
                     );
 
@@ -2054,23 +2627,29 @@ printButton
             }
 
 
+
             /* =============================================
-               FALLBACK APP INVENTOR / OUDERE WEBVIEW
+               FALLBACK OUDERE WEBVIEW
             ============================================= */
 
             if (
+
                 typeof window.AppInventor
                     !== "undefined"
+
                 &&
+
                 typeof window.AppInventor
                     .setWebViewString
                     === "function"
+
             ) {
+
 
                 window.AppInventor
                     .setWebViewString(
 
-                        "PRINT_IN_BROWSER"
+                        "PRINT_PAGE"
 
                     );
 
@@ -2080,8 +2659,9 @@ printButton
             }
 
 
+
             /* =============================================
-               NORMALE BROWSER
+               NORMALE BROWSER / PC
             ============================================= */
 
             window.print();
@@ -2089,6 +2669,7 @@ printButton
         }
 
     );
+
 
 
 /* =========================================================
@@ -2102,17 +2683,24 @@ backButton
 
         () => {
 
+
             if (
+
                 window.history.length
-                > 1
+                >
+                1
+
             ) {
+
 
                 window.history
                     .back();
 
             }
 
+
             else {
+
 
                 window.location.href =
                     "index.html";
@@ -2122,6 +2710,7 @@ backButton
         }
 
     );
+
 
 
 /* =========================================================
@@ -2138,7 +2727,10 @@ drawFretboard();
 
 updateLegend();
 
+
 </script>
 
+
 </body>
+
 </html>
